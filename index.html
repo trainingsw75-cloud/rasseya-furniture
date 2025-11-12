@@ -140,16 +140,13 @@
             font-size: 0.9em;
         }
         
-        .photo-placeholder {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+        .gallery-img {
+            width: 100%;
             height: 200px;
+            object-fit: cover;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2em;
             margin-top: 15px;
+            border: 3px solid #e9ecef;
         }
         
         ul {
@@ -191,7 +188,17 @@
             padding: 20px;
             margin: 20px 0;
             border-radius: 8px;
+        }
+        
+        .guarantee-card {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
             text-align: center;
+        }
+        
+        .guarantee-card h2 {
+            color: white;
+            font-size: 1.8em;
         }
         
         .footer {
@@ -296,24 +303,38 @@
             <h2 class="gallery-title">🎨 Наши Работы</h2>
             
             <div class="gallery-grid">
+                <!-- Беседки и сауны -->
+                <div class="gallery-item">
+                    <span class="gallery-icon">🏡</span>
+                    <h3>Беседки и сауны</h3>
+                    <p>Деревянные беседки и сауны для дачи и загородных домов</p>
+                    <img src="images/besedka-1.jpg" alt="Беседка из дерева" class="gallery-img">
+                    <img src="images/besedka-sauna1.jpg" alt="Сауна из дерева" class="gallery-img" style="margin-top: 10px;">
+                </div>
+                
+                <!-- Барные стойки -->
+                <div class="gallery-item">
+                    <span class="gallery-icon">🍻</span>
+                    <h3>Барные стойки</h3>
+                    <p>Стильные барные стойки для кафе, ресторанов и домов</p>
+                    <img src="images/barstreet-1.jpg" alt="Барная стойка" class="gallery-img">
+                </div>
+                
+                <!-- Навесы и двери -->
+                <div class="gallery-item">
+                    <span class="gallery-icon">🚪</span>
+                    <h3>Навесы и двери</h3>
+                    <p>Деревянные навесы и двери из массива</p>
+                    <img src="images/naves-1.jpg" alt="Навес из дерева" class="gallery-img">
+                    <img src="images/dver-1.jpg" alt="Дверь из массива" class="gallery-img" style="margin-top: 10px;">
+                </div>
+                
                 <!-- Столы -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🪑</span>
                     <h3>Столы из массива</h3>
                     <p>Обеденные, письменные, рабочие столы ручной работы</p>
-                    <div class="photo-placeholder">
-                        📸 Фото столов
-                    </div>
-                </div>
-                
-                <!-- Двери -->
-                <div class="gallery-item">
-                    <span class="gallery-icon">🚪</span>
-                    <h3>Двери из массива</h3>
-                    <p>Межкомнатные и входные двери ручной работы</p>
-                    <div class="photo-placeholder">
-                        📸 Фото дверей
-                    </div>
+                    <img src="https://picsum.photos/400/300?random=1" alt="Стол из массива" class="gallery-img">
                 </div>
                 
                 <!-- Стулья -->
@@ -321,19 +342,7 @@
                     <span class="gallery-icon">🪑</span>
                     <h3>Стулья и кресла</h3>
                     <p>Эргономичные стулья и кресла из натурального дерева</p>
-                    <div class="photo-placeholder">
-                        📸 Фото стульев
-                    </div>
-                </div>
-                
-                <!-- Беседки -->
-                <div class="gallery-item">
-                    <span class="gallery-icon">🏡</span>
-                    <h3>Беседки и террасы</h3>
-                    <p>Деревянные беседки для дачи и загородных домов</p>
-                    <div class="photo-placeholder">
-                        📸 Фото беседок
-                    </div>
+                    <img src="https://picsum.photos/400/300?random=2" alt="Стул из массива" class="gallery-img">
                 </div>
                 
                 <!-- Кухни -->
@@ -341,19 +350,7 @@
                     <span class="gallery-icon">🍳</span>
                     <h3>Кухни из массива</h3>
                     <p>Кухонные гарнитуры и мебель для кухни</p>
-                    <div class="photo-placeholder">
-                        📸 Фото кухонь
-                    </div>
-                </div>
-                
-                <!-- Прихожие -->
-                <div class="gallery-item">
-                    <span class="gallery-icon">👔</span>
-                    <h3>Прихожие и гардеробы</h3>
-                    <p>Мебель для прихожей и гардеробные системы</p>
-                    <div class="photo-placeholder">
-                        📸 Фото прихожих
-                    </div>
+                    <img src="https://picsum.photos/400/300?random=3" alt="Кухня из массива" class="gallery-img">
                 </div>
                 
                 <!-- Столешницы -->
@@ -361,9 +358,7 @@
                     <span class="gallery-icon">📋</span>
                     <h3>Столешницы</h3>
                     <p>Кухонные и рабочие столешницы из массива</p>
-                    <div class="photo-placeholder">
-                        📸 Фото столешниц
-                    </div>
+                    <img src="https://picsum.photos/400/300?random=4" alt="Столешница из массива" class="gallery-img">
                 </div>
                 
                 <!-- Реставрация -->
@@ -371,10 +366,23 @@
                     <span class="gallery-icon">🔧</span>
                     <h3>Реставрация</h3>
                     <p>Восстановление антикварной мебели</p>
-                    <div class="photo-placeholder">
-                        📸 До/После
-                    </div>
+                    <img src="https://picsum.photos/400/300?random=5" alt="Реставрация мебели" class="gallery-img">
                 </div>
+            </div>
+        </div>
+
+        <!-- Условия и гарантии -->
+        <div class="grid">
+            <div class="card guarantee-card">
+                <h2>📝 Условия работы</h2>
+                <ul>
+                    <li>✅ <strong>Мебель создаётся на заказ</strong> по индивидуальным размерам</li>
+                    <li>✅ <strong>Срок работы:</strong> от 14 дней в зависимости от сложности</li>
+                    <li>✅ <strong>Гарантия на все изделия</strong> по договору</li>
+                    <li>✅ <strong>Бесплатный выезд</strong> для замера и консультации</li>
+                    <li>✅ <strong>Поэтапная оплата</strong> - 30% предоплата, 70% при сдаче</li>
+                    <li>✅ <strong>Доставка и установка</strong> по Апшеронску и району</li>
+                </ul>
             </div>
         </div>
 
