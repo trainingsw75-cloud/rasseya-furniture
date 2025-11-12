@@ -419,5 +419,29 @@
             }
         });
     </script>
+<script>
+    // Обработка формы
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[name="contact"]');
+        const successMessage = document.getElementById('successMessage');
+        
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Показываем сообщение об успехе
+                successMessage.style.display = 'block';
+                
+                // Очищаем форму
+                form.reset();
+                
+                // Прячем сообщение через 5 секунд
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 5000);
+            });
+        }
+    });
+</script>
 </body>
 </html>
