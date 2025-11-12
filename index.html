@@ -250,12 +250,14 @@
 </head>
 <body>
     <div class="container">
+        <!-- Шапка -->
         <div class="header">
             <div class="logo">🪑</div>
             <h1>Мастерская "РассЕЯ"</h1>
             <p class="subtitle">Мебель из массива и реставрация в Апшеронске</p>
         </div>
 
+        <!-- Основная информация -->
         <div class="grid">
             <div class="card">
                 <h2>🎯 Наши услуги</h2>
@@ -313,10 +315,12 @@
             </div>
         </div>
 
+        <!-- Галерея работ -->
         <div class="gallery-section">
             <h2 class="gallery-title">🎨 Наши Работы</h2>
             
             <div class="gallery-grid">
+                <!-- Беседки и сауны -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🏡</span>
                     <h3>Беседки и сауны</h3>
@@ -325,6 +329,7 @@
                     <img src="besedka-sauna1.jpg" alt="Сауна из дерева" class="gallery-img" style="margin-top: 10px;">
                 </div>
                 
+                <!-- Барные стойки -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🍻</span>
                     <h3>Барные стойки</h3>
@@ -332,6 +337,7 @@
                     <img src="barstreet-1.jpg" alt="Барная стойка" class="gallery-img">
                 </div>
                 
+                <!-- Навесы и двери -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🚪</span>
                     <h3>Навесы и двери</h3>
@@ -340,6 +346,7 @@
                     <img src="dver-1.jpg" alt="Дверь из массива" class="gallery-img" style="margin-top: 10px;">
                 </div>
                 
+                <!-- Столы -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🪑</span>
                     <h3>Столы из массива</h3>
@@ -348,6 +355,7 @@
                     <img src="stol-2.jpg" alt="Стол из массива" class="gallery-img" style="margin-top: 10px;">
                 </div>
                 
+                <!-- Кухни -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🍳</span>
                     <h3>Кухни из массива</h3>
@@ -355,6 +363,7 @@
                     <img src="kuhnya-1.jpg" alt="Кухня из массива" class="gallery-img">
                 </div>
                 
+                <!-- Реставрация -->
                 <div class="gallery-item">
                     <span class="gallery-icon">🔧</span>
                     <h3>Реставрация</h3>
@@ -364,6 +373,7 @@
             </div>
         </div>
 
+        <!-- Условия и гарантии -->
         <div class="grid">
             <div class="card guarantee-card">
                 <h2>📝 Условия работы</h2>
@@ -419,29 +429,5 @@
             }
         });
     </script>
-<script>
-    // Обработка формы
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.querySelector('form[name="contact"]');
-        const successMessage = document.getElementById('successMessage');
-        
-        if (form) {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Показываем сообщение об успехе
-                successMessage.style.display = 'block';
-                
-                // Очищаем форму
-                form.reset();
-                
-                // Прячем сообщение через 5 секунд
-                setTimeout(function() {
-                    successMessage.style.display = 'none';
-                }, 5000);
-            });
-        }
-    });
-</script>
 </body>
 </html>
