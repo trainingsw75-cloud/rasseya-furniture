@@ -1,0 +1,33 @@
+name: Deploy Telegram Bot to Yandex Cloud
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг 1: Получает код из вашего репозитория
+      - uses: actions/checkout@v4
+
+      # Шаг 2: Настраивает окружение для деплоя в Яндекс.Облако
+      - name: Setup Yandex Cloud CLI
+        uses: yc-actions/yc-cli-setup@v1
+        with:
+          token: ${{ secrets.YC_OAUTH_TOKEN }}
+          cloud-id: ${{ secrets.YC_CLOUD_ID }}
+          folder-id: ${{ secrets.YC_FOLDER_ID }}
+
+      # Шаг 3: Создает или обновляет вашу облачную функцию
+      - name: Deploy Function
+        run: |
+          yc serverless function create --name=rasseya-furniture-bot || true
+          yc serverless function version create \
+            --function-name=rasseya-furniture-bot \
+            --runtime python311 \
+            --entrypoint index.handler \
+            --memory 128m \
+            --execution-timeout 10s \
+            --source-path . \
+            --environment TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}
