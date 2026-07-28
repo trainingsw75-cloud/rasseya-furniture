@@ -1,0 +1,2778 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Мебель из массива и реставрация — мастерская «РассЕЯ», Апшеронск</title>
+<!-- описание держим в 160 символов: длиннее поисковик обрезает, и хвост
+     в выдачу не попадает. Номер телефона и мастер есть на самой странице -->
+<meta name="description" content="Мебель из массива по вашим размерам и реставрация старой мебели. Мастерская «РассЕЯ», Апшеронск, улица Фабричная. От 25 000 ₽, замер бесплатный.">
+<meta name="theme-color" content="#E7E3D9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171812" media="(prefers-color-scheme: dark)">
+<!-- автолинковку телефона выключаем: номер и так стоит ссылками tel:,
+     а системная синяя подчёркнутая строка ломает палитру и вечернюю тему -->
+<meta name="format-detection" content="telephone=no">
+
+<!-- Когда сайт опубликуют по своему адресу — раскомментируйте эти две строки
+     и подставьте настоящий адрес. Выдумывать адрес заранее нельзя:
+<link rel="canonical" href="https://адрес-сайта/">
+<meta property="og:url" content="https://адрес-сайта/">
+-->
+
+
+<!-- Превью для WhatsApp / Telegram. og:image нет намеренно: своих фотографий
+     у мастерской пока нет, а чужие ставить нельзя. Когда Константин снимет
+     первые работы — добавьте сюда og:image со ссылкой на свой же файл. -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Мастерская «РассЕЯ»">
+<meta property="og:title" content="Мебель из массива и реставрация — мастерская «РассЕЯ», Апшеронск">
+<meta property="og:description" content="Столы, стулья, шкафы, кухни из массива по вашим размерам. Реставрация старой мебели. Апшеронск, улица Фабричная. От 25 000 ₽, замер бесплатный. +7 (918) 307-76-22.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%2317454A'/%3E%3Cg%20fill='none'%20stroke='%23E3CE9F'%20stroke-width='2'%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.5'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='8.5'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='13.5'/%3E%3C/g%3E%3C/svg%3E">
+
+<script>/* тема применяется до первой отрисовки — иначе мигает чужой фон */
+try{var t=localStorage.getItem("rasseya-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}
+</script>
+
+<style>
+/* =========================================================================
+   Мастерская «РассЕЯ» — один файл, ноль внешних запросов.
+   Замысел: размеченная доска. Слева у каждого раздела — линейка с делениями
+   и подпись вдоль неё; это работает на телефоне так же, как на большом экране.
+   Палитра: заболонь (нейтраль, уведённая в зелень) + купорос (единственный
+   цвет действия) + латунь (только у чисел).
+   ========================================================================= */
+
+*,*::before,*::after{box-sizing:border-box}
+/* clip, а не hidden: hidden на html ломает position:sticky у шапки.
+   Страховка от бокового сдвига, если в будущей правке появится длинная строка */
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body,h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+svg,canvas{display:block;max-width:100%}
+button,input,select{font:inherit;color:inherit}
+
+:root{
+  color-scheme:light;   /* иначе select, трек ползунка и скроллбар остаются светлыми */
+  /* ---- дневной свет: солнце сквозь лес, предгорье ---- */
+  --bg:#E7E3D9;
+  --bg-deep:#DCD5C6;
+  --ink:#221E18;          /* 12.9:1 */
+  --ink-2:#4B443A;        /* 7.5:1  */
+  --ink-3:#5B5347;        /* 5.9:1 / 5.2:1 на полосе */
+  --line:#7C7466;         /* 3.6:1 / 3.2:1 — несущие линейки */
+  --line-soft:#A79E8C;    /* волосяные, но на них держится структура блоков */
+  --act:#17454A;          /* купорос: цвет действия, 8.3:1 */
+  --act-ink:#F1EDE1;      /* на купоросе 9.0:1 */
+  --num:#7A5210;          /* латунь: только числа, 5.4:1 / 4.7:1 */
+  --link:#16383E;
+  --focus:#17454A;
+  --top-bg:rgba(231,227,217,.90);
+  --hatch:rgba(34,30,24,.05);
+  --glare:rgba(255,246,226,.20);   /* блик на спиле тёплый: это солнце, не лампа дневного света */
+  --shade:rgba(58,40,22,.26);      /* и тень тоже тёплая, коричневая, а не чёрная */
+  --halo:rgba(198,165,116,.16);    /* ореол света под спилом */
+  --cast:rgba(74,56,32,.22);       /* падающая тень: тонирована корой */
+  --cast-rgb:74,56,32;             /* та же тень для холста конструктора */
+  --cast-a:.18;
+  --sky:rgba(255,250,236,.55);     /* свет, ложащийся на верх страницы */
+
+  /* ---- спил: дуб предгорья. Сердцевинные лучи СВЕТЛЕЕ лица — у дуба они бликуют ---- */
+  --w-face:#C6A574; --w-early:#E3CE9F; --w-late:#6B4418; --w-side:#B39461;
+  --w-bark:#473729; --w-knot:#472C14; --w-crack:#35251A; --w-ray:#CDB183;
+
+  --fd:"Arial Narrow","Avenir Next Condensed","Roboto Condensed","PT Sans Narrow","Liberation Sans Narrow",system-ui,sans-serif;
+  --fb:Georgia,"Noto Serif","Droid Serif","Times New Roman",serif;
+  --fm:Consolas,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono","Liberation Mono",monospace;
+
+  --step:clamp(44px,6.4vw,92px);
+  --gut:34px;               /* ширина линейки слева */
+  --bar:54px;               /* высота нижней полосы связи */
+  --top-h:72px;             /* высота липкой шапки (замерено 60px) плюс запас: и отступ якорей, и потолок для липких блоков */
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    /* в вечерней теме плотная полоса СВЕТЛЕЕ фона: иначе .sec--band читается
+       не как слой ближе к свету, а как провал в странице */
+    --bg:#171812; --bg-deep:#1E1F17;
+    --ink:#E7E3D8; --ink-2:#AFAA9C; --ink-3:#9A9587;
+    --line:#736F60; --line-soft:#545044;
+    --act:#7FB8BE; --act-ink:#101109; --num:#E4B45A; --link:#A2CDD2;
+    --focus:#7FB8BE;
+    --top-bg:rgba(23,24,18,.90);
+    --hatch:rgba(231,227,216,.06);
+    --glare:rgba(255,231,186,.12);
+    --shade:rgba(10,7,3,.34);
+    --halo:rgba(228,180,90,.15);
+    --cast:rgba(0,0,0,.46);
+    --cast-rgb:0,0,0;
+    --cast-a:.5;
+    --sky:rgba(255,236,196,.10);
+    --w-face:#8F6F42; --w-early:#B7935A; --w-late:#40290F; --w-side:#6E5230;
+    --w-bark:#2A2017; --w-knot:#211508; --w-crack:#1A1108; --w-ray:#A5875A;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#171812; --bg-deep:#1E1F17;
+  --ink:#E7E3D8; --ink-2:#AFAA9C; --ink-3:#9A9587;
+  --line:#736F60; --line-soft:#545044;
+  --act:#7FB8BE; --act-ink:#101109; --num:#E4B45A; --link:#A2CDD2;
+  --focus:#7FB8BE;
+  --top-bg:rgba(23,24,18,.90);
+  --hatch:rgba(231,227,216,.06);
+  --glare:rgba(255,231,186,.12);
+  --shade:rgba(10,7,3,.34);
+  --halo:rgba(228,180,90,.15);
+  --cast:rgba(0,0,0,.46);
+  --cast-rgb:0,0,0;
+  --cast-a:.5;
+  --sky:rgba(255,236,196,.10);
+  --w-face:#8F6F42; --w-early:#B7935A; --w-late:#40290F; --w-side:#6E5230;
+  --w-bark:#2A2017; --w-knot:#211508; --w-crack:#1A1108; --w-ray:#A5875A;
+}
+
+body{
+  /* солнце приходит сверху и слева — тем же углом, что свет на спиле (см. вектор в draw()) */
+  background:var(--bg);
+  background-image:radial-gradient(120% 72% at 12% -12%, var(--sky) 0, transparent 62%);
+  background-repeat:no-repeat;
+  color:var(--ink);
+  font-family:var(--fb); font-size:17px; line-height:1.6;
+}
+
+/* ---------- типографика ----------
+   ВАЖНО про кегль: rem считается от html, а у html размер по умолчанию 16px
+   (17px стоит на body и на rem не влияет). Поэтому нижний предел «ничего
+   мельче 12px» — это .75rem, и ни одна подпись на странице не опускается ниже.
+   Ставите новое правило с моноширинной подписью — берите .75rem, не .68rem. */
+.m{font-family:var(--fm);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.n{font-family:var(--fm);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+h1{font-family:var(--fd);font-weight:700;text-transform:uppercase;line-height:.98;letter-spacing:.012em;
+   font-size:clamp(1.95rem,4.8vw,3.25rem);text-wrap:balance}
+@media (max-width:759px){h1{font-size:clamp(1.95rem,8.4vw,2.9rem)}}
+h1 .soft{display:block;color:var(--ink-2);font-weight:400;font-family:var(--fb);text-transform:none;
+   letter-spacing:0;font-size:.42em;line-height:1.35;margin-top:14px;max-width:34ch}
+h2{font-family:var(--fd);font-weight:700;text-transform:uppercase;line-height:1;letter-spacing:.015em;
+   font-size:clamp(1.55rem,5.6vw,2.6rem)}
+h3{font-family:var(--fd);font-weight:700;line-height:1.15;letter-spacing:.01em;font-size:clamp(1.06rem,3.4vw,1.24rem)}
+p{max-width:64ch}
+a{color:var(--link);text-underline-offset:.2em;text-decoration-thickness:1px}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+::selection{background:var(--act);color:var(--act-ink)}
+/* в полосе разделов (overflow-x:auto) и в нижней полосе связи (край экрана)
+   обводка со смещением наружу срезается — рисуем её внутрь */
+.jump a:focus-visible,
+.callbar a:focus-visible{outline:2px solid var(--focus);outline-offset:-3px}
+.lead{font-size:1.04rem;color:var(--ink-2);margin-top:16px}
+.note{font-size:.93rem;color:var(--ink-2)}
+
+.wrap{width:min(1180px,100% - 26px);margin-inline:auto;position:relative}
+.skip{position:absolute;left:-9999px;top:0;z-index:99;background:var(--act);color:var(--act-ink);padding:10px 14px;text-decoration:none}
+.skip:focus{left:8px;top:8px}
+
+/* ---------- шапка ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--top-bg);border-bottom:1px solid var(--line-soft);
+  box-shadow:0 10px 22px -20px var(--cast)}
+@supports (backdrop-filter:blur(2px)){
+  @media (min-width:760px){.top{backdrop-filter:blur(8px)}}
+}
+@media (max-width:759px){.top{background:var(--bg)}}
+.top__in{display:flex;align-items:center;gap:10px;min-height:52px;padding-block:6px}
+.brand{display:flex;flex-direction:column;line-height:1.05;margin-right:auto;min-width:0;text-decoration:none;color:inherit}
+.brand b{font-family:var(--fd);font-weight:700;font-size:1.1rem;letter-spacing:.01em}
+.brand span{font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+.top__nav{display:none}
+/* пунктов в меню пять, а не четыре: на 900px строка «бренд + меню + телефон»
+   уже не вставала в одну линию, поэтому порог поднят до 1120px */
+@media (min-width:1120px){
+  .top__nav{display:flex;gap:18px;margin-right:18px}
+  .top__nav a{font-family:var(--fm);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);text-decoration:none;padding:6px 0;border-bottom:1px solid transparent}
+  .top__nav a:hover{color:var(--ink);border-bottom-color:var(--num)}
+}
+.top__tel{font-family:var(--fm);font-size:.85rem;font-weight:700;text-decoration:none;color:var(--ink);
+  white-space:nowrap;border:1px solid var(--line);padding:8px 11px;font-variant-numeric:tabular-nums}
+.top__tel:hover{border-color:var(--act);color:var(--act)}
+.top__ic{display:none}
+@media (max-width:559px){
+  .top__tel{display:none}
+  .top__ic{display:grid;place-items:center;width:42px;height:42px;flex:none;border:1px solid var(--line);color:var(--ink)}
+  .top__ic svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7}
+  .brand b{font-size:1rem}
+  .brand span{font-size:.75rem;letter-spacing:.04em}
+}
+
+/* полоса переходов по разделам — на телефоне и планшете */
+.jump{border-bottom:1px solid var(--line-soft);background:var(--bg)}
+/* полосу можно листать вбок — правый край растворяется, чтобы это было видно */
+@media (max-width:1119px){
+  .jump > .wrap{
+    -webkit-mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 34px),transparent 100%);
+    mask-image:linear-gradient(to right,#000 0,#000 calc(100% - 34px),transparent 100%);
+  }
+}
+.jump ul{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.jump ul::-webkit-scrollbar{display:none}
+/* полоса видна на 760–1119px, куда телефонный медиазапрос не достаёт, —
+   поэтому кегль здесь задан сразу по нижнему пределу, а не только на телефоне */
+.jump a{display:block;white-space:nowrap;padding:11px 14px;text-decoration:none;color:var(--ink-2);
+  font-family:var(--fm);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;border-right:1px solid var(--line-soft)}
+.jump li:first-child a{padding-left:0}
+/* левый край полосы совпадает с левым краем содержимого разделов */
+@media (max-width:1023px){.jump > .wrap{padding-left:var(--gut)}}
+@media (min-width:1120px){.jump{display:none}}
+
+/* ---------- линейка раздела ---------- */
+.sec{position:relative;padding-block:var(--step);scroll-margin-top:var(--top-h)}
+/* у самого <main> отступа якоря не было: «К содержанию» приземлялось под шапку */
+#main{scroll-margin-top:var(--top-h)}
+.sec--band{background:var(--bg-deep)}
+.sec + .sec{border-top:1px solid var(--line-soft)}
+.sec > .wrap{padding-left:var(--gut)}
+.sec > .wrap::before{
+  content:"";position:absolute;left:20px;top:calc(var(--step) * -0.42);bottom:calc(var(--step) * -0.42);
+  width:10px;border-left:1px solid var(--line);
+  background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 11px);
+  opacity:.55;pointer-events:none;
+}
+.mark{position:absolute;left:0;top:2px;margin:0;writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--fm);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+@media (min-width:1024px){
+  :root{--gut:84px}
+  .sec > .wrap::before{left:36px;width:12px}
+  .mark{letter-spacing:.18em}
+}
+.head{margin-bottom:26px}
+.head p{margin-top:14px;color:var(--ink-2)}
+
+/* ---------- первый экран ---------- */
+.hero{padding-top:22px}
+.hero__grid{display:grid;gap:26px}
+/* без min-width:0 колонка сетки не может стать уже собственного минимума
+   элемента, а у .slab__box этот минимум считается из min-height и aspect-ratio
+   (230 / 0.8 = 288px). На 320px содержимое выезжало за экран и молча
+   срезалось об html{overflow-x:clip}: у таблицы фактов пропадала правая рамка */
+.hero__grid > *{min-width:0}
+@media (min-width:960px){
+  .hero{padding-top:34px}
+  .hero__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:44px;align-items:start}
+}
+.eyebrow{display:flex;flex-wrap:wrap;gap:5px 16px;margin-bottom:14px;
+  font-family:var(--fm);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.eyebrow b{font-weight:700;color:var(--ink)}
+
+.facts{display:flex;flex-wrap:wrap;margin-top:20px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.facts li{flex:1 1 33%;min-width:104px;padding:9px 11px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.facts dt{font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.facts dd{font-family:var(--fm);font-variant-numeric:tabular-nums;font-weight:700;font-size:.98rem;margin-top:3px;letter-spacing:.01em}
+
+.cta{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 16px;text-decoration:none;
+  border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;
+  font-family:var(--fm);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+.btn:hover{border-color:var(--act);color:var(--act)}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.6;flex:none}
+.btn--call{background:var(--act);border-color:var(--act);color:var(--act-ink);font-size:.92rem;letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;box-shadow:0 10px 20px -16px var(--cast)}
+.btn--call:hover{background:var(--act);color:var(--act-ink);border-color:var(--act)}
+/* это целая фраза, а не ярлык-подпись: моноширинный капслок в три строки
+   на телефоне не читается. Капитель остаётся у подписей (.facts dt, .m и т.п.) */
+.free{margin-top:12px;font-family:var(--fb);font-size:.95rem;color:var(--ink-2)}
+
+/* ---------- спил ---------- */
+.slab{margin-top:6px}
+.slab__box{position:relative;width:100%;aspect-ratio:1/.8;min-height:230px;max-height:min(50vh,460px);
+  background:radial-gradient(62% 56% at 46% 44%, var(--halo) 0, transparent 72%)}
+/* на самых узких экранах пропорция важнее нижней границы высоты:
+   иначе спил растягивается почти в квадрат */
+@media (max-width:399px){.slab__box{min-height:180px}}
+.slab__box > *{position:absolute;inset:0;width:100%;height:100%}
+#logfall .f{fill:var(--w-face);stroke:var(--w-bark);stroke-width:7}
+#logfall .r{fill:none;stroke:var(--w-late);stroke-width:2;opacity:.85}
+#log{touch-action:pan-y;cursor:grab}
+#log.drag{cursor:grabbing}
+.slab__cap{margin-top:10px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:flex-start;justify-content:space-between}
+.slab__cap p{font-size:.9rem;color:var(--ink-2);max-width:40ch;margin:0}
+.slab__cap b{font-family:var(--fd);font-weight:700;color:var(--ink);letter-spacing:.02em}
+.mini{background:transparent;border:1px solid var(--line);padding:7px 10px;cursor:pointer;flex:none;
+  font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.mini:hover{border-color:var(--act);color:var(--act)}
+
+/* ---------- что делаем ---------- */
+.need li{padding:15px 0;border-top:1px solid var(--line-soft)}
+.need li:last-child{border-bottom:1px solid var(--line-soft)}
+.need .q{color:var(--ink-2);font-style:italic}
+.need .a{margin-top:5px}
+.need .a h3{display:inline}
+.need .a::before{content:"→ ";color:var(--num);font-family:var(--fm)}
+.need .w{margin-top:5px;font-size:.92rem;color:var(--ink-2)}
+@media (min-width:760px){
+  .need li{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:0 30px;align-items:baseline}
+  .need .a{margin-top:0}
+  .need .w{grid-column:2}
+}
+
+.sub{margin-top:38px;margin-bottom:14px;font-family:var(--fm);font-size:.75rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3)}
+.dirs{display:grid;grid-template-columns:1fr}
+@media (min-width:760px){.dirs{grid-template-columns:1fr 1fr;column-gap:36px}}
+.dirs div{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.dirs dt{font-family:var(--fd);font-weight:700;font-size:1.04rem;letter-spacing:.01em}
+.dirs dd{font-size:.88rem;color:var(--ink-2);text-align:right}
+
+/* ---------- размеры → сообщение ---------- */
+.calc{display:grid;gap:24px}
+@media (min-width:900px){.calc{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:44px;align-items:start}}
+.ctl{margin-bottom:16px}
+.ctl__top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:5px}
+.ctl label{font-family:var(--fm);font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.ctl output{font-family:var(--fm);font-variant-numeric:tabular-nums;font-size:1.05rem;font-weight:700}
+/* ползунок — главный интерактив страницы, поэтому 44px по высоте и крупный бегунок */
+input[type=range]{width:100%;height:44px;background:transparent;touch-action:pan-y;
+  -webkit-appearance:none;appearance:none;accent-color:var(--act)}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:var(--line-soft);border:1px solid var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;
+  margin-top:-11px;border-radius:50%;background:var(--act);border:1px solid var(--act)}
+input[type=range]::-moz-range-track{height:6px;background:var(--line-soft);border:1px solid var(--line)}
+input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--act);border:1px solid var(--act)}
+select{width:100%;background:var(--bg);border:1px solid var(--line);padding:11px 10px;color:var(--ink);
+  font-family:var(--fd);font-size:1.02rem;font-weight:700}
+.calc .btn{width:100%;margin-top:14px}
+.msg{border:1px solid var(--line-soft);padding:14px;margin-top:16px;font-size:.92rem;color:var(--ink-2)}
+.msg b{display:block;font-family:var(--fm);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px;font-weight:400}
+.msg span{color:var(--ink)}
+
+/* ---------- цена и условия ---------- */
+.two{display:grid;gap:34px}
+@media (min-width:960px){.two{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:52px}}
+.price{border:1px solid var(--line);padding:20px 18px;background:var(--bg);box-shadow:0 14px 28px -24px var(--cast)}
+.price__big{font-family:var(--fm);font-variant-numeric:tabular-nums;font-weight:700;color:var(--num);
+  font-size:clamp(1.9rem,7.4vw,2.6rem);line-height:1;letter-spacing:-.01em}
+.price__lead{font-family:var(--fm);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:8px}
+.price .note{margin-top:14px}
+.terms{margin-top:22px}
+.terms div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0;border-top:1px solid var(--line-soft)}
+.terms dt{font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);flex:none}
+.terms dd{font-family:var(--fm);font-variant-numeric:tabular-nums;font-size:.86rem;text-align:right}
+
+.steps li{position:relative;padding:14px 0 14px 62px;border-bottom:1px solid var(--line-soft)}
+.steps li:first-child{border-top:1px solid var(--line-soft)}
+.steps li::before{content:"";position:absolute;left:44px;top:0;bottom:0;width:8px;border-left:1px solid var(--line);
+  background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px 10px);opacity:.6}
+.steps .st{position:absolute;left:0;top:17px;font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--num);font-variant-numeric:tabular-nums}
+.steps p{font-size:.92rem;color:var(--ink-2);margin-top:4px}
+
+/* ---------- места под фотографии ---------- */
+.shots{display:grid;gap:14px}
+@media (min-width:700px){.shots{grid-template-columns:repeat(3,1fr)}.shot{aspect-ratio:4/3}}
+.shot{border:1px dashed var(--line);background-image:repeating-linear-gradient(135deg,transparent 0 7px,var(--hatch) 7px 8px);
+  min-height:118px;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.shot b{font-family:var(--fd);font-weight:700;font-size:1.04rem;line-height:1.1}
+.shot span{font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- контакты ---------- */
+.cnt{display:grid;gap:28px}
+@media (min-width:860px){.cnt{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:46px}}
+.telbig{font-family:var(--fm);font-variant-numeric:tabular-nums;font-weight:700;
+  font-size:clamp(1.5rem,6.6vw,2.5rem);line-height:1.25;letter-spacing:-.02em;
+  text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;min-height:48px;
+  border-bottom:3px solid var(--num);padding:6px 0 8px}
+.telbig:hover{color:var(--act);border-bottom-color:var(--act)}
+.cnt dl div{display:flex;flex-wrap:wrap;gap:2px 18px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.cnt dt{font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);flex:0 0 92px}
+.cnt dd{flex:1 1 180px;font-size:.98rem}
+.come{margin-top:20px}
+
+/* ---------- подвал ---------- */
+footer{border-top:1px solid var(--line);background:var(--bg-deep);
+  padding-block:30px calc(30px + var(--bar) + env(safe-area-inset-bottom))}
+@media (min-width:760px){footer{padding-bottom:30px}}
+.foot{display:grid;gap:22px}
+@media (min-width:760px){.foot{grid-template-columns:1.4fr 1fr 1fr;gap:34px}}
+.foot p{font-size:.9rem;color:var(--ink-2)}
+.foot .m{color:var(--ink-3);margin-bottom:8px;display:block}
+.foot nav ul{display:flex;flex-direction:column;gap:6px}
+.foot nav a{font-size:.92rem}
+/* строчная ссылка с вертикальным padding не поднимала строку и наезжала на соседей:
+   поднимаем саму строку через min-height у inline-flex */
+.foot p a{display:inline-flex;align-items:center;min-height:44px}
+.foot__tel a{font-family:var(--fm);font-weight:700;font-size:1.06rem;font-variant-numeric:tabular-nums}
+/* на большом экране шапка и подвал встают на ту же вертикаль, что заголовки разделов */
+@media (min-width:1024px){
+  .top__in,.foot{padding-left:var(--gut)}
+}
+.tbtn{background:transparent;border:1px solid var(--line);padding:9px 12px;cursor:pointer;color:var(--ink-2);
+  font-family:var(--fm);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;margin-top:6px}
+.tbtn:hover{border-color:var(--act);color:var(--act)}
+
+/* ---------- нижняя полоса связи ---------- */
+.callbar{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;background:var(--bg);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -10px 24px -20px var(--cast)}
+.callbar a{flex:1;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:6px;
+  height:var(--bar);padding-inline:4px;text-decoration:none;color:var(--ink);border-right:1px solid var(--line);
+  font-family:var(--fm);font-size:.78rem;letter-spacing:.02em;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.callbar a:last-child{border-right:0}
+.callbar a.pri{flex:1.7;background:var(--act);color:var(--act-ink)}
+.callbar svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;flex:none}
+/* на узком экране подписи «WhatsApp» и «Telegram» уходили под overflow:hidden
+   с запасом в 6-11 px — на настоящем Android шрифт шире, чем в отладке */
+@media (max-width:389px){.callbar a{font-size:.75rem;gap:4px;letter-spacing:0}}
+@media (min-width:760px){.callbar{display:none}}
+
+/* =========================================================================
+   ТЕЛЕФОН. Три правила: ничего мельче 12px, ничего ниже 44px по нажатию,
+   ничего в две колонки. Порог 12px = .75rem держится уже в основных правилах
+   выше — на любой ширине, а не только здесь; тут подписи только чуть крупнее
+   и разряжены слабее, чтобы строки не росли. Характер страницы (линейка,
+   капитель, моноширинные подписи) сохраняется.
+   ========================================================================= */
+@media (max-width:759px){
+  .facts dt,.terms dt,.cnt dt,.steps .st,.msg b,.mark{font-size:.75rem;letter-spacing:.04em}
+  .ctl label,.mini,.tbtn,.sub,.jump a,.eyebrow{font-size:.78rem;letter-spacing:.05em}
+  .brand span{font-size:.75rem;letter-spacing:.04em}
+  .m{font-size:.75rem;letter-spacing:.06em}
+
+  .jump a{padding:14px 16px}
+  .top__ic{width:46px;height:46px}
+  .mini,.tbtn{padding:13px 16px;min-height:44px}
+  .brand{padding-block:7px}
+  .foot nav a{display:inline-block;padding:11px 0}
+  /* строчные телефоны внутри абзацев: правило .foot p a до них не доставало,
+     а цель нажатия выходила 18 и 38 пикселей при норме 44 */
+  .come a,.rsy-kn__master a{display:inline-flex;align-items:center;min-height:44px}
+  /* ссылка на раздел размеров стоит посреди фразы и переносится на две строки,
+     поэтому inline-flex ей не годится: добавляем высоту нажатия вертикальными
+     полями — на высоту строки они не влияют, а цель дотягивают до 44px */
+  /* 12px давали ровно 41px при строке 17px — на три пикселя ниже нормы, замерено */
+  #sobrat .rsy-kn__lead a{padding-block:14px}
+
+  /* две колонки с выключкой вправо на 360px превращаются в лесенку */
+  .dirs div{display:block;padding:12px 0}
+  .dirs dd{text-align:left;margin-top:3px}
+  .terms div{flex-wrap:wrap}
+  .terms dd{text-align:left}
+}
+@media (max-width:559px){
+  /* 62px под декоративную линейку — это 21% экрана; номер шага встаёт строкой */
+  .steps li{padding-left:0}
+  .steps li::before{display:none}
+  .steps .st{position:static;display:block;margin-bottom:4px}
+}
+
+@media print{
+  .top,.jump,.callbar,.tbtn,.mini,.slab{display:none !important}
+  body{background:#fff;color:#000}
+  .sec{padding-block:18px}
+  a{color:#000}
+}
+
+/* =========================================================================
+   КОНСТРУКТОР (.rsy-kn). Сам блок не переписан: свои цвета он читает из
+   переменных --rsy-*, поэтому вся палитра задаётся здесь и меняется вместе
+   с темой сайта — внутренние тёмные и светлые блоки конструктора при этом
+   становятся холостыми, они всё равно упираются в эти же переменные.
+   Третьего акцента не заводим: зелёная кнопка WhatsApp тоже уходит в купорос.
+   ========================================================================= */
+:root{
+  --rsy-bg:var(--bg);
+  --rsy-panel:var(--bg-deep);  /* коробки — плоскостью, а не одной волосяной линией */
+  --rsy-ink:var(--ink);
+  --rsy-muted:var(--ink-2);
+  --rsy-line:var(--line);      /* граница коробки: 3.6:1, норма для элементов управления */
+  --rsy-line2:var(--line);
+  --rsy-accent:var(--act);
+  --rsy-accent-ink:var(--act-ink);
+  --rsy-chip:var(--bg);
+  /* отдельный тон под отмеченный вопрос: --rsy-chip равен --rsy-bg, и заливка
+     им ничего не меняла — отметка была видна только по рамке и галочке */
+  --rsy-chip-on:var(--bg-deep);
+  --rsy-canvas-1:var(--bg);
+  --rsy-canvas-2:var(--bg-deep);
+  --rsy-dim:var(--ink-3);
+  --rsy-warn:var(--num);       /* предупреждение всегда про число — значит латунь */
+  --rsy-wa:var(--act);
+  --rsy-shadow:var(--cast-rgb);
+  --rsy-shadow-a:var(--cast-a);
+  --rsy-radius:0;              /* на странице нет ни одного скруглённого угла */
+}
+/* правила снаружи блока: шрифт, кегль заголовка и стык типографики.
+   Кнопки и числа конструктора берут ту же капитель и тот же моноширинный,
+   что и вся страница, — иначе внутри раздела живут два разных языка кнопок */
+#sobrat .rsy-kn{font-family:var(--fb)}
+#sobrat .rsy-kn h2{font-family:var(--fd);font-weight:700;text-transform:uppercase;line-height:1;
+  letter-spacing:.015em;font-size:clamp(1.55rem,5.6vw,2.6rem);margin-bottom:14px}
+#sobrat .rsy-kn__view,
+#sobrat .rsy-kn__btn{font-family:var(--fm);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
+/* моноширинный — только там, где в поле стоит число. Класс .rsy-kn__num висит
+   и на текстовых полях («как вас зовут», «город или адрес») — их этим шрифтом
+   набирать нельзя: это шрифт чисел, а не имён */
+#sobrat input.rsy-kn__num[type="number"],
+#sobrat input.rsy-kn__num[type="tel"]{font-family:var(--fm)}
+/* p{max-width:64ch} со страницы обрезало подсвеченную плашку заявки */
+#sobrat .rsy-kn p{max-width:none}
+/* обводка фокуса на холсте срезалась родителем с overflow:hidden — рисуем внутрь */
+#sobrat .rsy-kn__canvas:focus-visible{outline:3px solid var(--k-accent);outline-offset:-3px}
+/* липкая сцена стояла на top:12px и верхние 40px рисунка постоянно закрывала
+   липкая шапка сайта — опускаем ровно на её высоту */
+@media (min-width:820px){#sobrat .rsy-kn__stage{top:calc(var(--top-h) + 12px)}}
+
+[hidden]{display:none !important}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">К содержанию</a>
+
+<header class="top">
+  <div class="wrap top__in">
+    <a class="brand" href="#verh">
+      <b>Мастерская «РассЕЯ»</b>
+      <span>Массив и реставрация · Апшеронск</span>
+    </a>
+    <nav class="top__nav" aria-label="Разделы сайта">
+      <a href="#chto">Что делаем</a>
+      <a href="#razmery">Размеры</a>
+      <a href="#cena">Цена и сроки</a>
+      <a href="#sobrat">Собрать под свой размер</a>
+      <a href="#kontakty">Контакты</a>
+    </nav>
+    <a class="top__tel n" href="tel:+79183077622">+7 (918) 307-76-22</a>
+    <a class="top__ic" href="tel:+79183077622" aria-label="Позвонить: +7 918 307-76-22">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/></svg>
+    </a>
+  </div>
+</header>
+
+<nav class="jump" aria-label="Переход к разделу">
+  <div class="wrap">
+    <ul>
+      <li><a href="#chto">Что делаем</a></li>
+      <li><a href="#razmery">Размеры</a></li>
+      <li><a href="#cena">Цена и сроки</a></li>
+      <li><a href="#sobrat">Собрать под свой размер</a></li>
+      <li><a href="#kontakty">Контакты</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+
+  <!-- ===================== ПЕРВЫЙ ЭКРАН ===================== -->
+  <section class="sec hero" id="verh" aria-labelledby="h1">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Апшеронск</span>
+      <div class="hero__grid">
+        <div>
+          <p class="eyebrow"><span>Апшеронск, улица Фабричная</span><b>с 9:00 до 18:00</b><span>мастер Константин</span></p>
+
+          <h1 id="h1">Дерево по вашим размерам<span class="soft">Мебель из массива и реставрация старой мебели. Апшеронск, улица Фабричная</span></h1>
+
+          <ul class="facts">
+            <li><dl><dt>Цена</dt><dd>от 25 000 ₽</dd></dl></li>
+            <li><dl><dt>Срок</dt><dd>от 14 дней</dd></dl></li>
+            <li><dl><dt>Замер</dt><dd>бесплатно</dd></dl></li>
+            <li><dl><dt>С деревом</dt><dd>больше 10 лет</dd></dl></li>
+            <li><dl><dt>Оплата</dt><dd>30% / 70%</dd></dl></li>
+            <li><dl><dt>Доставка</dt><dd>с установкой</dd></dl></li>
+          </ul>
+
+          <div class="cta">
+            <a class="btn btn--call" href="tel:+79183077622">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/></svg>
+              +7 (918) 307-76-22
+            </a>
+            <a class="btn" href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.9 7L4 20l1.1-3.9A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+              WhatsApp
+            </a>
+            <a class="btn" href="https://t.me/+79183077622" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5 3 11.5l5 1.8L19 7.5l-8.3 8 .3 4.5 2.6-3.3 4.2 3z"/></svg>
+              Telegram
+            </a>
+          </div>
+          <p class="free">Спросить — бесплатно. Приехать и померить — тоже. WhatsApp и Telegram на этом же номере.</p>
+
+          <p class="lead">Столы, стулья, шкафы и кухни из цельного дерева — под вашу комнату, а не под каталог. Реставрируем антикварную мебель и восстанавливаем деревянные изделия. Мастерская в Апшеронске, на улице Фабричной: работаем с девяти до шести, машину есть где поставить.</p>
+        </div>
+
+        <figure class="slab">
+          <div class="slab__box">
+            <!-- запасной рисунок: виден, если JS не отработал -->
+            <svg id="logfall" viewBox="0 0 300 240" aria-hidden="true">
+              <g transform="translate(150,120)">
+                <ellipse class="f" rx="96" ry="88"/>
+                <g class="r">
+                  <ellipse rx="10" ry="9"/><ellipse rx="22" ry="20"/><ellipse rx="33" ry="30"/>
+                  <ellipse rx="44" ry="40"/><ellipse rx="55" ry="50"/><ellipse rx="66" ry="60"/>
+                  <ellipse rx="76" ry="70"/><ellipse rx="86" ry="79"/>
+                </g>
+              </g>
+            </svg>
+            <canvas id="log" width="600" height="480" role="img" tabindex="0"
+              aria-label="Объёмный рисунок спила бревна: годовые кольца, сучок и трещина на торце. Стрелками влево и вправо спил можно повернуть"></canvas>
+          </div>
+          <figcaption class="slab__cap">
+            <p><b>Одно кольцо — один год.</b> В предгорье под Апшеронском преобладает дуб, лесом занято больше 80% района. С деревом мы работаем больше десяти лет. <span id="hint" hidden>Спил можно повернуть: потяните в сторону или нажмите стрелки.</span></p>
+            <button class="mini" id="gfx" type="button" hidden>Показать рост колец</button>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ЧТО ДЕЛАЕМ ===================== -->
+  <section class="sec sec--band" id="chto" aria-labelledby="h-chto">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Услуги</span>
+      <div class="head">
+        <h2 id="h-chto">Что делаем руками</h2>
+        <p>Слева — задача своими словами. Справа — как эта услуга называется.</p>
+      </div>
+
+      <ul class="need">
+        <li>
+          <p class="q">В магазине нет стола, стульев или шкафа нужного размера</p>
+          <div class="a"><h3>Мебель из массива на заказ</h3></div>
+          <p class="w">Собираем из цельного дерева по вашим размерам: длина и ширина — по комнате, а не по каталогу.</p>
+        </li>
+        <li>
+          <p class="q">Старый комод рассохся, шпон отходит, ножка шатается</p>
+          <div class="a"><h3>Реставрация антикварной мебели</h3></div>
+          <p class="w">Расскажите по телефону, что с вещью, или пришлите фото в WhatsApp. Консультация бесплатная.</p>
+        </li>
+        <li>
+          <p class="q">Вещь деревянная, но это вообще не мебель</p>
+          <div class="a"><h3>Восстановление деревянных изделий</h3></div>
+          <p class="w">Восстанавливаем деревянные изделия, не только мебель. Опишите вещь по телефону или пришлите фото в WhatsApp.</p>
+        </li>
+        <li>
+          <p class="q">Нужны стол, стулья и шкаф — и чтобы они были в одном духе</p>
+          <div class="a"><h3>Изготовление столов, стульев и шкафов</h3></div>
+          <p class="w">Столы, стулья и шкафы — по вашим размерам, а не «примерно».</p>
+        </li>
+        <li>
+          <p class="q">Скрипит, шатается, отвалилась дверца, разошёлся клей</p>
+          <div class="a"><h3>Ремонт деревянной мебели</h3></div>
+          <p class="w">Скажите по телефону, что именно случилось. Консультация бесплатная.</p>
+        </li>
+      </ul>
+
+      <p class="sub">Чем ещё занимаемся</p>
+      <dl class="dirs">
+        <!-- Подписи справа намеренно короткие и только из подтверждённых данных.
+             Всё, что мастер не говорил (материал корпусов, работа с заведениями,
+             место установки), убрано: заказчик не должен прийти с требованием,
+             которого Константин не давал. -->
+        <div><dt>Беседки и сауны</dt><dd>по индивидуальным размерам</dd></div>
+        <div><dt>Барные стойки</dt><dd>по индивидуальным размерам</dd></div>
+        <div><dt>Навесы и двери</dt><dd>по индивидуальным размерам</dd></div>
+        <div><dt>Столы</dt><dd>из массива, по вашим размерам</dd></div>
+        <div><dt>Кухни</dt><dd>из массива, по вашим размерам</dd></div>
+        <div><dt>Реставрация антиквариата</dt><dd>антикварная мебель, восстановление</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===================== РАЗМЕРЫ → СООБЩЕНИЕ ===================== -->
+  <section class="sec" id="razmery" aria-labelledby="h-razmery">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Размеры</span>
+      <div class="head">
+        <h2 id="h-razmery">Назовите размеры — соберём заявку</h2>
+        <p>Цена у каждой вещи своя, поэтому общего прайса нет: считаем по вашим размерам, от 25 000 ₽. Прикиньте габариты ползунками — на глаз — и отправьте одной кнопкой в WhatsApp. Ползунки ничего не считают: они собирают текст сообщения. Выезд на замер бесплатный.</p>
+      </div>
+
+      <div class="calc">
+        <div>
+          <div class="ctl">
+            <div class="ctl__top"><label for="kind">Что нужно</label></div>
+            <!-- data-l / data-b / data-h — отправная точка под выбранный пункт.
+                 Нет атрибута — нет и ползунка: у двери не бывает «длины»,
+                 а у реставрации габаритов вообще спрашивать нечего.
+                 Стол, стул и шкаф стоят на тех же числах, что и конструктор
+                 ниже: одна и та же вещь не должна открываться в двух размерах.
+                 data-axes — названия тех же трёх осей, слово в слово как в
+                 конструкторе: у стула и шкафа второй размер — глубина, а не
+                 ширина, и мастеру обе половины сайта пишут одинаково. -->
+            <select id="kind">
+              <option value="стол из массива" data-l="1800" data-b="900" data-h="750" data-axes="длина|ширина|высота">Стол</option>
+              <option value="стул из массива" data-l="450" data-b="450" data-h="900" data-axes="ширина|глубина|высота">Стул</option>
+              <option value="шкаф из массива" data-l="900" data-b="600" data-h="2000" data-axes="ширина|глубина|высота">Шкаф</option>
+              <option value="кухня из массива" data-l="3600" data-b="600" data-h="2100" data-axes="длина|глубина|высота">Кухня</option>
+              <option value="барная стойка" data-l="1800" data-b="600" data-h="1100" data-axes="длина|глубина|высота">Барная стойка</option>
+              <option value="беседка" data-l="3000" data-b="3000" data-h="2400" data-axes="длина|ширина|высота">Беседка</option>
+              <option value="сауна" data-l="2500" data-b="2000" data-h="2200" data-axes="длина|ширина|высота">Сауна</option>
+              <option value="навес" data-l="4000" data-b="3000" data-h="2500" data-axes="длина|ширина|высота">Навес</option>
+              <option value="дверь из массива" data-b="900" data-h="2100" data-axes="длина|ширина|высота">Дверь</option>
+              <option value="реставрация старой вещи">Реставрация старой вещи</option>
+            </select>
+          </div>
+          <div class="ctl" id="cL">
+            <div class="ctl__top"><label for="rL">Длина</label><output id="oL" for="rL" aria-live="off">1800 мм</output></div>
+            <input type="range" id="rL" min="400" max="6000" step="50" value="1800" aria-valuetext="1800 мм">
+          </div>
+          <div class="ctl" id="cB">
+            <div class="ctl__top"><label for="rB">Ширина</label><output id="oB" for="rB" aria-live="off">900 мм</output></div>
+            <input type="range" id="rB" min="300" max="4000" step="50" value="900" aria-valuetext="900 мм">
+          </div>
+          <div class="ctl" id="cH">
+            <div class="ctl__top"><label for="rH">Высота</label><output id="oH" for="rH" aria-live="off">750 мм</output></div>
+            <input type="range" id="rH" min="300" max="3000" step="25" value="750" aria-valuetext="750 мм">
+          </div>
+          <p class="note" id="ctlNote">Ползунки — отправная точка, а не каталог: ошибиться здесь не страшно. Замер бесплатный: приедем и померим точно.</p>
+          <p class="note" id="restNote" hidden>Тут размеры ни к чему: опишите вещь словами, фото пришлёте в переписке. Выезд на замер бесплатный.</p>
+        </div>
+
+        <div>
+          <div class="msg">
+            <b>Уйдёт вот такое сообщение</b>
+            <span id="preview">Здравствуйте, Константин. Пишу с сайта. Интересует: стол из массива, примерно 1800 × 900 × 750 мм (длина × ширина × высота). Подскажите, пожалуйста, срок и стоимость.</span>
+          </div>
+          <a class="btn btn--call" id="send" href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.9 7L4 20l1.1-3.9A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+            <span id="sendLabel">Отправить размеры в WhatsApp</span>
+          </a>
+          <a class="btn" href="tel:+79183077622">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/></svg>
+            Или просто позвонить и рассказать
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ЦЕНА И УСЛОВИЯ ===================== -->
+  <section class="sec sec--band" id="cena" aria-labelledby="h-cena">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Цена и сроки</span>
+      <div class="head">
+        <h2 id="h-cena">Сколько стоит и что за чем идёт</h2>
+      </div>
+
+      <div class="two">
+        <div>
+          <div class="price">
+            <p class="price__lead">Мебель из массива</p>
+            <p class="price__big">от 25 000 ₽</p>
+            <p class="note">Считаем каждую вещь отдельно, по размерам: расчёт индивидуальный. Консультация и выезд на замер бесплатные.</p>
+            <dl class="terms">
+              <div><dt>Расчёт</dt><dd>индивидуальный</dd></div>
+              <div><dt>Консультация</dt><dd>бесплатная</dd></div>
+              <div><dt>Выезд на замер</dt><dd>бесплатный</dd></div>
+              <div><dt>Изготовление</dt><dd>по вашим размерам</dd></div>
+              <div><dt>Срок</dt><dd>от 14 дней</dd></div>
+              <div><dt>Оплата</dt><dd>30% вперёд, 70% при сдаче</dd></div>
+              <div><dt>Рассрочка</dt><dd>возможна</dd></div>
+              <div><dt>Гарантия</dt><dd>по договору</dd></div>
+              <div><dt>Доставка</dt><dd>Апшеронск и район, с установкой</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div>
+          <ol class="steps">
+            <li><span class="st">шаг 1</span>
+              <h3>Звонок</h3>
+              <p>Рассказываете, что нужно, — своими словами. Консультация бесплатная.</p>
+            </li>
+            <li><span class="st">шаг 2</span>
+              <h3>Замер</h3>
+              <p>Приедем и померим. Выезд на замер бесплатный.</p>
+            </li>
+            <li><span class="st">шаг 3</span>
+              <h3>Расчёт и договор</h3>
+              <p>Считаем именно вашу вещь. Гарантия прописана в договоре, при надобности обсуждаем рассрочку.</p>
+            </li>
+            <li><span class="st">шаг 4</span>
+              <h3>Предоплата 30%</h3>
+              <p>Оплата 30% вперёд, 70% при сдаче.</p>
+            </li>
+            <li><span class="st">шаг 5</span>
+              <h3>Изготовление</h3>
+              <p>От 14 дней.</p>
+            </li>
+            <li><span class="st">шаг 6</span>
+              <h3>Доставка, установка и остаток 70%</h3>
+              <p>Привозим и ставим на место — по Апшеронску и району. Остаток 70% при сдаче.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== СОБРАТЬ ПОД СВОЙ РАЗМЕР =====================
+       Готовый блок конструктора перенесён целиком и не переписан. Свои цвета
+       он берёт из переменных --rsy-*, они заданы в общих стилях выше и ходят
+       за темой сайта. Заголовок раздела — его собственный <h2>.
+       Раздел стоит ПОСЛЕ цены и сроков намеренно: он самый длинный на странице
+       (около пяти экранов телефона), и путь «первый экран → что делаем →
+       размеры → цена → контакты» не должен идти сквозь него. Порядок пунктов
+       в трёх меню — шапка, полоса разделов, подвал — совпадает с этим. -->
+  <section class="sec" id="sobrat" aria-labelledby="h-sobrat">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Свой размер</span>
+<div class="rsy-kn">
+<style>
+.rsy-kn{
+  --k-bg:        var(--rsy-bg,        #fbf7f1);
+  --k-panel:     var(--rsy-panel,     #ffffff);
+  --k-ink:       var(--rsy-ink,       #2b2119);
+  --k-muted:     var(--rsy-muted,     #6d6157);
+  --k-line:      var(--rsy-line,      #e2d7c8);
+  --k-line2:     var(--rsy-line2,     #cdbda7);
+  --k-accent:    var(--rsy-accent,    #8a5a2b);
+  --k-accent-ink:var(--rsy-accent-ink,#ffffff);
+  --k-chip:      var(--rsy-chip,      #f3ece1);
+  --k-chip-on:   var(--rsy-chip-on,   #ece1cf);
+  --k-canvas-1:  var(--rsy-canvas-1,  #efe6d8);
+  --k-canvas-2:  var(--rsy-canvas-2,  #dccfba);
+  --k-dim:       var(--rsy-dim,       #6f5f4d);
+  --k-warn:      var(--rsy-warn,      #a8431f);
+  --k-wa:        var(--rsy-wa,        #1f7a4d);
+  --k-shadow:    var(--rsy-shadow,    20,14,8);
+  --k-shadow-a:  var(--rsy-shadow-a,  0.17);
+  --k-radius:    var(--rsy-radius,    14px);
+
+  box-sizing:border-box;
+  background:var(--k-bg);
+  color:var(--k-ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:16px;
+  line-height:1.5;
+  border:1px solid var(--k-line);
+  border-radius:var(--k-radius);
+  padding:16px;
+  -webkit-text-size-adjust:100%;
+}
+/* Собственных тёмного и светлого блоков у конструктора здесь больше нет.
+   Все --rsy-* объявлены безусловно на :root страницы, поэтому запасные
+   значения после запятой не срабатывали никогда, а три блока были дословно
+   одинаковыми. Тема сайта доходит сюда через --rsy-* и меняется вместе с ней. */
+
+.rsy-kn *,.rsy-kn *::before,.rsy-kn *::after{box-sizing:border-box}
+.rsy-kn p{margin:0 0 10px}
+.rsy-kn h2,.rsy-kn h3{margin:0 0 8px;line-height:1.25;font-weight:700}
+.rsy-kn h2{font-size:1.35rem}
+.rsy-kn h3{font-size:1.02rem}
+.rsy-kn__lead{color:var(--k-muted);font-size:.95rem}
+.rsy-kn :focus-visible{outline:3px solid var(--k-accent);outline-offset:2px;border-radius:var(--k-radius)}
+.rsy-kn__sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.rsy-kn__grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px}
+@media (min-width:820px){
+  .rsy-kn__grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}
+  .rsy-kn__stage{position:sticky;top:12px}
+}
+
+/* ---- сцена ---- */
+.rsy-kn__stage{min-width:0}
+.rsy-kn__canvas-wrap{position:relative;border:1px solid var(--k-line);border-radius:var(--k-radius);overflow:hidden;background:var(--k-canvas-1)}
+/* высота холста постоянная: раньше она подгонялась под пропорции изделия и
+   вся форма прыгала под пальцем на каждое касание ползунка */
+.rsy-kn__canvas{display:block;width:100%;height:300px;touch-action:pan-y;cursor:grab}
+@media (min-width:820px){.rsy-kn__canvas{height:380px}}
+.rsy-kn__canvas:active{cursor:grabbing}
+/* запасной чертёж: виден, пока холст не нарисован, и остаётся навсегда,
+   если скрипт не отработал. Скрипт убирает его первым же кадром */
+.rsy-kn__fallback{position:absolute;inset:0;width:100%;height:100%}
+.rsy-kn__fallback text{font-family:var(--fm);font-size:13px;fill:var(--k-dim)}
+.rsy-kn__fallback text.b{fill:var(--k-ink);font-weight:700}
+.rsy-kn__cap{margin:8px 0 0;font-size:.82rem;color:var(--k-muted)}
+.rsy-kn__hint{margin:6px 0 0;font-size:.82rem;color:var(--k-muted)}
+.rsy-kn__views{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rsy-kn__view{
+  min-height:44px;min-width:44px;padding:0 13px;
+  border:1px solid var(--k-line2);background:var(--k-panel);color:inherit;
+  border-radius:var(--k-radius);font:inherit;font-size:.9rem;cursor:pointer;
+}
+.rsy-kn__view:hover{border-color:var(--k-accent)}
+.rsy-kn__view[aria-pressed="true"]{background:var(--k-accent);border-color:var(--k-accent);color:var(--k-accent-ink);font-weight:600}
+
+/* ---- форма ---- */
+.rsy-kn__form{min-width:0;display:grid;gap:14px}
+.rsy-kn__box{border:1px solid var(--k-line);background:var(--k-panel);border-radius:var(--k-radius);padding:12px;margin:0;min-width:0}
+.rsy-kn__box legend{padding:0 6px;font-weight:700;font-size:.95rem}
+.rsy-kn__chips{display:flex;flex-wrap:wrap;gap:8px}
+.rsy-kn__chip{position:relative;display:inline-flex}
+.rsy-kn__chip input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.rsy-kn__chip span{
+  display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;
+  border:1px solid var(--k-line2);border-radius:var(--k-radius);background:var(--k-chip);font-size:.92rem;
+}
+.rsy-kn__chip input:checked+span,.rsy-kn__chip.is-on span{
+  background:var(--k-accent);color:var(--k-accent-ink);border-color:var(--k-accent);font-weight:600;
+}
+.rsy-kn__chip input:focus-visible+span{outline:3px solid var(--k-accent);outline-offset:2px}
+
+.rsy-kn__row{display:grid;gap:4px;margin-bottom:12px}
+.rsy-kn__row:last-child{margin-bottom:0}
+.rsy-kn__lab{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.92rem;font-weight:600}
+.rsy-kn__num{
+  width:104px;min-height:44px;padding:6px 8px;font:inherit;text-align:right;
+  border:1px solid var(--k-line2);border-radius:var(--k-radius);
+  background:var(--k-bg);color:inherit;font-variant-numeric:tabular-nums;
+}
+.rsy-kn__num.is-warn{border-color:var(--k-warn);box-shadow:0 0 0 2px color-mix(in srgb, var(--k-warn) 22%, transparent)}
+.rsy-kn__wide{width:100%;text-align:left}
+.rsy-kn__range{width:100%;height:44px;margin:0;accent-color:var(--k-accent);background:transparent}
+.rsy-kn__note{margin:0;font-size:.8rem;color:var(--k-muted)}
+.rsy-kn__note.is-warn{color:var(--k-warn);font-weight:600}
+.rsy-kn__text{
+  width:100%;min-height:66px;padding:10px;font:inherit;
+  border:1px solid var(--k-line2);border-radius:var(--k-radius);
+  background:var(--k-bg);color:inherit;resize:vertical;
+}
+.rsy-kn__hidden{display:none}
+
+/* ---- «о чём спросить мастера» ---- */
+.rsy-kn__asks{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 8px}
+.rsy-kn__ask{
+  display:flex;align-items:center;gap:9px;min-height:44px;
+  padding:8px 14px 8px 12px;border:1px solid var(--k-line2);border-radius:var(--k-radius);
+  background:var(--k-bg);cursor:pointer;font-size:.92rem;line-height:1.25;
+}
+.rsy-kn__ask input{width:20px;height:20px;flex:none;accent-color:var(--k-accent);margin:0;cursor:pointer}
+/* наведение и отметка должны различаться: раньше и то и другое красило рамку
+   в один и тот же акцент, и наведённый неотмеченный вопрос выглядел отмеченным.
+   Теперь наведение — только линия потемнее, отметка — другой фон и двойная рамка */
+.rsy-kn__ask:hover{border-color:var(--k-ink)}
+.rsy-kn__ask:has(input:checked){
+  border-color:var(--k-accent);background:var(--k-chip-on);
+  box-shadow:inset 0 0 0 1px var(--k-accent);
+}
+@supports (background:color-mix(in srgb, red 10%, blue)){
+  .rsy-kn__ask:has(input:checked){background:color-mix(in srgb, var(--k-accent) 14%, var(--k-chip-on))}
+}
+.rsy-kn__ask:focus-within{outline:2px solid var(--k-accent);outline-offset:2px}
+
+/* ---- заявка ---- */
+.rsy-kn__order{margin-top:16px;border:1px solid var(--k-line);background:var(--k-panel);border-radius:var(--k-radius);padding:14px}
+.rsy-kn__spec{
+  display:block;margin:0 0 10px;padding:12px;
+  border-left:4px solid var(--k-accent);background:var(--k-chip);border-radius:var(--k-radius);
+  font-size:1rem;font-weight:600;word-break:break-word;white-space:pre-line;
+}
+.rsy-kn__terms{font-size:.88rem;color:var(--k-muted)}
+.rsy-kn__acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.rsy-kn__btn{
+  flex:1 1 100%;min-height:48px;padding:0 16px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border-radius:var(--k-radius);border:1px solid var(--k-line2);
+  background:var(--k-panel);color:inherit;
+  font:inherit;font-size:1rem;font-weight:600;text-decoration:none;cursor:pointer;text-align:center;
+}
+@media (min-width:420px){.rsy-kn__btn{flex:1 1 0;min-width:150px}}
+.rsy-kn__btn--wa{background:var(--k-wa);border-color:var(--k-wa);color:var(--k-accent-ink);flex-basis:100%}
+.rsy-kn__btn--call{background:var(--k-accent);border-color:var(--k-accent);color:var(--k-accent-ink)}
+.rsy-kn__status{margin:8px 0 0;font-size:.86rem;color:var(--k-muted);min-height:1.3em}
+.rsy-kn__master{margin:12px 0 0;font-size:.9rem;color:var(--k-muted)}
+.rsy-kn__master a{color:inherit}
+
+@media (prefers-reduced-motion: reduce){
+  .rsy-kn *{transition:none!important;animation:none!important}
+}
+@media print{
+  .rsy-kn{border:0;padding:0;--k-bg:#fff;--k-panel:#fff;--k-ink:#000;--k-muted:#333;--k-line:#999;--k-line2:#999;--k-chip:#fff}
+  .rsy-kn__views,.rsy-kn__acts,.rsy-kn__range,.rsy-kn__hint{display:none!important}
+  .rsy-kn__grid{display:block}
+}
+</style>
+
+<h2 id="h-sobrat">Соберите мебель под свой размер</h2>
+<p class="rsy-kn__lead">Выберите изделие, задайте размеры в миллиметрах — и сразу увидите его целиком. Рисунок можно повернуть и посмотреть с любой стороны. Готовую заявку отправьте в WhatsApp или продиктуйте по телефону.</p>
+<p class="rsy-kn__lead">Рисуем стол, стул и шкаф. Кухню, барную стойку, беседку, сауну, навес, дверь или реставрацию опишите словами в разделе <a href="#razmery">«Назовите размеры»</a> выше — или просто позвоните.</p>
+
+<div class="rsy-kn__grid">
+
+  <div class="rsy-kn__stage">
+    <div class="rsy-kn__canvas-wrap">
+      <canvas class="rsy-kn__canvas" data-rsy="canvas" tabindex="0"
+              role="img"
+              aria-label="Рисунок изделия. Стрелки влево и вправо — поворот, вверх и вниз — наклон."></canvas>
+      <!-- то же изделие, что стоит в полях по умолчанию: без скрипта здесь
+           не пустая рамка, а чертёж стола с теми же размерами -->
+      <svg class="rsy-kn__fallback" data-rsy="fallback" viewBox="0 0 400 300"
+           preserveAspectRatio="xMidYMid meet" role="img"
+           aria-label="Чертёж стола: длина 1800, ширина 900, высота 750 мм">
+        <g fill="none" stroke="var(--k-dim)" stroke-width="2">
+          <rect x="66" y="92" width="268" height="16"/>
+          <rect x="88" y="108" width="18" height="112"/>
+          <rect x="294" y="108" width="18" height="112"/>
+          <path d="M106 128h188"/>
+        </g>
+        <g fill="none" stroke="var(--k-dim)" stroke-width="1" opacity=".9">
+          <path d="M66 244h268M66 238v12M334 238v12"/>
+          <path d="M358 92v128M352 92h12M352 220h12"/>
+        </g>
+        <text x="200" y="264" text-anchor="middle">1800 мм</text>
+        <text x="352" y="156" text-anchor="end">750 мм</text>
+        <text class="b" x="200" y="40" text-anchor="middle">Стол, 1800×900×750 мм</text>
+        <text x="200" y="62" text-anchor="middle">длина × ширина × высота</text>
+      </svg>
+    </div>
+    <p class="rsy-kn__cap">Точны здесь те размеры, которые вы задали, — они и уйдут мастеру. Ножки, полки, дверцы и толщины досок нарисованы условно. Цвет на рисунке — просто «дерево», не порода.</p>
+    <div class="rsy-kn__views" data-rsy="views">
+      <button type="button" class="rsy-kn__view" data-view="corner">С угла</button>
+      <button type="button" class="rsy-kn__view" data-view="front">Спереди</button>
+      <button type="button" class="rsy-kn__view" data-view="side">Сбоку</button>
+      <button type="button" class="rsy-kn__view" data-view="top">Сверху</button>
+      <button type="button" class="rsy-kn__view" data-tilt="up">Наклон выше</button>
+      <button type="button" class="rsy-kn__view" data-tilt="down">Наклон ниже</button>
+    </div>
+    <p class="rsy-kn__hint">Пальцем: ведите вбок — изделие поворачивается, дальше вверх-вниз — наклоняется. Чтобы пролистать страницу, ведите пальцем мимо рисунка. С клавиатуры — стрелками, когда рисунок в фокусе.</p>
+  </div>
+
+  <form class="rsy-kn__form" data-rsy="form" novalidate>
+    <fieldset class="rsy-kn__box">
+      <legend>Что делаем</legend>
+      <!-- стартовые кнопки лежат в разметке: без JS блок не должен быть пустой
+           рамкой. Скрипт всё равно перезаписывает их через innerHTML -->
+      <div class="rsy-kn__chips" data-rsy="products">
+        <label class="rsy-kn__chip is-on"><input type="radio" name="rsy-product-nojs" value="table" checked><span>Стол</span></label>
+        <label class="rsy-kn__chip"><input type="radio" name="rsy-product-nojs" value="chair"><span>Стул</span></label>
+        <label class="rsy-kn__chip"><input type="radio" name="rsy-product-nojs" value="wardrobe"><span>Шкаф</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset class="rsy-kn__box">
+      <legend>Размеры, мм</legend>
+      <!-- value / min / max стоят прямо в разметке и совпадают со столом —
+           изделием, выбранным по умолчанию. Без скрипта это не три пустых поля
+           и три ползунка «от 0 до 100», а честные размеры стола; скрипт
+           переставляет их под выбранное изделие в syncDims(). -->
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab"><span data-rsy="lab1">Длина, мм</span>
+          <input class="rsy-kn__num" data-rsy="num1" type="number" inputmode="numeric" step="10" min="800" max="3000" value="1800"></label>
+        <input class="rsy-kn__range" data-rsy="rng1" type="range" step="10" min="800" max="3000" value="1800" aria-label="Длина в миллиметрах, ползунок">
+        <p class="rsy-kn__note" data-rsy="note1">Ползунок: от 800 до 3000 мм.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab"><span data-rsy="lab2">Ширина, мм</span>
+          <input class="rsy-kn__num" data-rsy="num2" type="number" inputmode="numeric" step="10" min="600" max="1200" value="900"></label>
+        <input class="rsy-kn__range" data-rsy="rng2" type="range" step="10" min="600" max="1200" value="900" aria-label="Ширина в миллиметрах, ползунок">
+        <p class="rsy-kn__note" data-rsy="note2">Ползунок: от 600 до 1200 мм.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab"><span data-rsy="lab3">Высота, мм</span>
+          <input class="rsy-kn__num" data-rsy="num3" type="number" inputmode="numeric" step="10" min="700" max="850" value="750"></label>
+        <input class="rsy-kn__range" data-rsy="rng3" type="range" step="10" min="700" max="850" value="750" aria-label="Высота в миллиметрах, ползунок">
+        <p class="rsy-kn__note" data-rsy="note3">Ползунок: от 700 до 850 мм.</p>
+      </div>
+      <div class="rsy-kn__row rsy-kn__hidden" data-rsy="shelfrow">
+        <label class="rsy-kn__lab"><span>Полок внутри, не считая верх и низ</span>
+          <input class="rsy-kn__num" data-rsy="shnum" type="number" inputmode="numeric" step="1" min="1" max="6" value="3"></label>
+        <input class="rsy-kn__range" data-rsy="shrng" type="range" step="1" min="1" max="6" value="3" aria-label="Полок внутри, ползунок">
+        <p class="rsy-kn__note" data-rsy="shnote">На рисунке помещается от 1 до 6 полок, верх и низ изделия сюда не входят.</p>
+      </div>
+    </fieldset>
+
+    <fieldset class="rsy-kn__box">
+      <legend>Сколько и когда</legend>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab"><span>Количество, шт.</span>
+          <input class="rsy-kn__num" data-rsy="qty" type="number" inputmode="numeric" step="1" min="1" max="20" value="1"></label>
+        <p class="rsy-kn__note" data-rsy="qtynote">Сколько штук нужно.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <span class="rsy-kn__lab" style="margin-bottom:2px" id="rsy-when-lab">Когда нужно</span>
+        <div class="rsy-kn__chips" data-rsy="when" role="group" aria-labelledby="rsy-when-lab">
+          <label class="rsy-kn__chip"><input type="radio" name="rsy-when-nojs" value="soon"><span>Как можно скорее</span></label>
+          <label class="rsy-kn__chip"><input type="radio" name="rsy-when-nojs" value="month"><span>В течение месяца</span></label>
+          <label class="rsy-kn__chip"><input type="radio" name="rsy-when-nojs" value="later"><span>Не срочно</span></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="rsy-kn__box">
+      <legend>Куда ехать на замер</legend>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab" style="flex-wrap:wrap"><span>Как вас зовут</span>
+          <input class="rsy-kn__num rsy-kn__wide" data-rsy="name" type="text" autocomplete="name" maxlength="60" placeholder="Например: Роман"></label>
+      </div>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab" style="flex-wrap:wrap"><span>Ваш телефон</span>
+          <input class="rsy-kn__num rsy-kn__wide" data-rsy="phone" type="tel" autocomplete="tel" maxlength="30" placeholder="+7 900 000-00-00"></label>
+        <p class="rsy-kn__note">Нужен, если отправите заявку не через WhatsApp.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab" style="flex-wrap:wrap"><span>Город или адрес</span>
+          <input class="rsy-kn__num rsy-kn__wide" data-rsy="city" type="text" maxlength="80" placeholder="Апшеронск, ул. ..."></label>
+        <p class="rsy-kn__note">Мастерская в Апшеронске — по адресу будет понятно, далеко ли ехать на замер.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <span class="rsy-kn__lab" style="margin-bottom:2px" id="rsy-asks-lab">О чём спросить мастера</span>
+        <!-- Правило этого блока: на галочке — короткая подпись, а в data-ask
+             лежит полный вопрос, который и уйдёт мастеру. Подпись обязана быть
+             честным сокращением этого вопроса, не шире его по смыслу.
+             Все пункты — вопросы заказчика. Сайт ничего не обещает от имени
+             мастерской и не называет ни условий, ни размера скидки. -->
+        <div class="rsy-kn__asks" data-rsy="asks" role="group" aria-labelledby="rsy-asks-lab">
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Сможете ли собрать изделие у меня на месте?"><span>Собрать у меня на месте</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Пройдёт ли изделие в дверной проём, или нужно разборное?"><span>Пройдёт ли в дверь</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Нужны доставка и подъём на этаж — как это устроить?"><span>Доставка и подъём</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Из какой породы дерева можете сделать?"><span>Порода дерева</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Чем покрывается готовое изделие?"><span>Покрытие</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Когда возможен выезд на замер?"><span>Когда выезд на замер</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Можно ли подобрать изделие под уже имеющуюся мебель?"><span>Подобрать под мою мебель</span></label>
+          <label class="rsy-kn__ask"><input type="checkbox" data-ask="Возможна ли скидка?"><span>Возможна ли скидка</span></label>
+        </div>
+        <p class="rsy-kn__note">Отметьте, что важно, — на кнопке подпись короткая, а в заявку каждый пункт уйдёт развёрнутым вопросом, целиком.</p>
+      </div>
+      <div class="rsy-kn__row">
+        <label class="rsy-kn__lab" style="flex-wrap:wrap" for="rsy-comment"><span>Пожелания (необязательно)</span></label>
+        <textarea id="rsy-comment" class="rsy-kn__text" data-rsy="comment" rows="3" maxlength="400"
+          placeholder="Например: закруглить углы, нужна доставка, есть свои петли"></textarea>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<div class="rsy-kn__order">
+  <h3>Ваша заявка</h3>
+  <p class="rsy-kn__spec" data-rsy="spec">Стол, 1800×900×750 мм (длина×ширина×высота), 1 шт.</p>
+  <!-- Цен в конструкторе нет и быть не должно: ни суммы, ни расчёта, ни
+       цифры в комментарии. Начальная сумма стоит на первом экране и в
+       разделе «Цена и сроки» — сюда её возвращать нельзя. -->
+  <p class="rsy-kn__terms">Расчёт индивидуальный. Консультация и выезд на замер бесплатные.</p>
+  <div class="rsy-kn__acts">
+    <a class="rsy-kn__btn rsy-kn__btn--wa" data-rsy="wa" href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">Отправить в WhatsApp</a>
+    <button type="button" class="rsy-kn__btn" data-rsy="copy">Скопировать текст</button>
+    <a class="rsy-kn__btn rsy-kn__btn--call" href="tel:+79183077622">Позвонить</a>
+  </div>
+  <p class="rsy-kn__status" data-rsy="status" role="status" aria-live="polite"></p>
+  <p class="rsy-kn__sr" data-rsy="live" role="status" aria-live="polite"></p>
+  <p class="rsy-kn__master">Мастерская «РассЕЯ», Апшеронск. Мастер Константин, <a href="tel:+79183077622">+7 918 307-76-22</a>.</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+var root = (document.currentScript && document.currentScript.closest)
+  ? document.currentScript.closest('.rsy-kn') : null;
+if(!root){ var all = document.querySelectorAll('.rsy-kn'); root = all[all.length-1]; }
+if(!root || root.getAttribute('data-rsy-ready')) return;
+root.setAttribute('data-rsy-ready','1');
+
+var UID = 'rsy' + Math.random().toString(36).slice(2,8);
+function q(n){ return root.querySelector('[data-rsy="'+n+'"]'); }
+var PHONE = '79183077622';
+
+/* ---------- что рисуем ----------
+   Список ровно по услугам мастерской: столы, стулья, шкафы. Числа в d1/d2/d3 —
+   это границы и начальное положение ПОЛЗУНКА, а не возможности мастерской:
+   нужен размер за пределами — он пишется в пожеланиях, и об этом сказано вслух. */
+var PRODUCTS = {
+  table:    { name:'Стол',  axes:['Длина','Ширина','Высота'],
+              d1:[800,3000,1800], d2:[600,1200,900], d3:[700,850,750] },
+  chair:    { name:'Стул',  axes:['Ширина','Глубина','Высота'],
+              d1:[350,600,450],   d2:[350,600,450],  d3:[750,1200,900] },
+  wardrobe: { name:'Шкаф',  axes:['Ширина','Глубина','Высота'],
+              d1:[600,1600,900],  d2:[350,700,600],  d3:[1200,2400,2000], shelves:4 }
+};
+var PRODUCT_ORDER = ['table','chair','wardrobe'];
+
+/* Один нейтральный деревянный цвет: породу мастерская не называла,
+   и рисунок её не обещает. */
+var WOOD = { base:[196,160,110], grain:[136,100,58], step:15 };
+var WHEN = { soon:{name:'Как можно скорее'}, month:{name:'В течение месяца'}, later:{name:'Не срочно'} };
+var WHEN_ORDER = ['soon','month','later'];
+
+var state = {
+  product:'table', d1:1800, d2:900, d3:750, shelves:3,
+  qty:1,
+  name:'', phone:'', city:'', when:'', comment:''
+};
+/* размеры запоминаются на каждое изделие отдельно */
+var saved = {};
+PRODUCT_ORDER.forEach(function(k){
+  var p = PRODUCTS[k];
+  saved[k] = { d1:p.d1[2], d2:p.d2[2], d3:p.d3[2], shelves:p.shelves || 0 };
+});
+
+/* ---------- мелкие помощники ---------- */
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+function round10(v){ return Math.round(v/10)*10; }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function clean(s){ return String(s).replace(/\s+/g,' ').trim(); }
+function rngFrom(seed){
+  var a = seed|0;
+  return function(){
+    a = a + 0x6D2B79F5 | 0;
+    var t = Math.imul(a ^ a>>>15, 1|a);
+    t = t + Math.imul(t ^ t>>>7, 61|t) ^ t;
+    return ((t ^ t>>>14)>>>0) / 4294967296;
+  };
+}
+function rgba(c,k,alpha){
+  var r = clamp(Math.round(c[0]*k),0,255),
+      g = clamp(Math.round(c[1]*k),0,255),
+      b = clamp(Math.round(c[2]*k),0,255);
+  return alpha===undefined ? 'rgb('+r+','+g+','+b+')' : 'rgba('+r+','+g+','+b+','+alpha+')';
+}
+/* Ограничение РИСУНКА, а не изделия и не мастерской: больше шести полок на
+   картинке сливаются в частокол. Раньше здесь стояла формула от высоты, но при
+   любой допустимой высоте шкафа (1200–2400 мм) она всё равно упиралась в шесть —
+   считалось одно и то же число. Оставлена честная постоянная. */
+var SHELVES_MAX = 6;
+function doorCount(){ return state.d1 >= 700 ? 2 : 1; }
+
+/* ---------- сборка изделия из досок ----------
+   x — длина (ширина), y — глубина (0 = к нам), z — вверх. Всё в мм. */
+function buildBoards(s){
+  var L = s.d1, D = s.d2, H = s.d3, b = [];
+  function add(x,y,z,w,d,h,alpha){
+    if(w > 1 && d > 1 && h > 1) b.push({x:x,y:y,z:z,w:w,d:d,h:h,alpha:alpha||1});
+  }
+
+  if(s.product === 'table'){
+    var t = 40,
+        ls = clamp(Math.min(L,D)*0.10, 60, 90),
+        ins = clamp(Math.min(L,D)*0.08, 25, 70);
+    add(0,0,H-t, L,D,t);
+    add(ins,ins,0, ls,ls,H-t);
+    add(L-ins-ls,ins,0, ls,ls,H-t);
+    add(ins,D-ins-ls,0, ls,ls,H-t);
+    add(L-ins-ls,D-ins-ls,0, ls,ls,H-t);
+    var ah = clamp((H-t)*0.20, 60, 110), at = 25, az = H-t-ah;
+    add(ins+ls, ins, az, L-2*(ins+ls), at, ah);
+    add(ins+ls, D-ins-at, az, L-2*(ins+ls), at, ah);
+    add(ins, ins+ls, az, at, D-2*(ins+ls), ah);
+    add(L-ins-at, ins+ls, az, at, D-2*(ins+ls), ah);
+
+  } else if(s.product === 'chair'){
+    /* сиденье примерно на половине высоты, выше — спинка: рисунок условный */
+    var st2 = 32, lg = clamp(Math.min(L,D)*0.10, 32, 50),
+        sz = clamp(H*0.50, 380, 500), ins2 = clamp(Math.min(L,D)*0.06, 15, 40);
+    add(0,0,sz-st2, L,D,st2);
+    add(ins2,ins2,0, lg,lg,sz-st2);
+    add(L-ins2-lg,ins2,0, lg,lg,sz-st2);
+    add(ins2,D-ins2-lg,0, lg,lg,sz-st2);
+    add(L-ins2-lg,D-ins2-lg,0, lg,lg,sz-st2);
+    var pr = clamp(sz*0.30, 90, 160);
+    add(ins2+lg, ins2+4, pr, L-2*(ins2+lg), 22, 22);
+    /* спинка: две стойки и перекладины между ними */
+    var bt = 26, bz = sz, bh = Math.max(60, H - sz);
+    add(ins2, D-ins2-lg, bz, lg, lg, bh);
+    add(L-ins2-lg, D-ins2-lg, bz, lg, lg, bh);
+    add(ins2+lg, D-ins2-lg+8, bz + bh*0.30, L-2*(ins2+lg), bt*0.6, Math.max(40, bh*0.22));
+    add(ins2+lg, D-ins2-lg+8, bz + bh*0.68, L-2*(ins2+lg), bt*0.6, Math.max(40, bh*0.22));
+
+  } else if(s.product === 'wardrobe'){
+    var sw = 25, dz = 20, cd = D - dz, n2 = clamp(s.shelves,1,SHELVES_MAX);
+    add(0,dz,0, sw,cd,H);
+    add(L-sw,dz,0, sw,cd,H);
+    add(sw,dz,H-sw, L-2*sw,cd,sw);
+    add(sw,dz,0, L-2*sw,cd,sw);
+    add(sw, D-12, sw, L-2*sw, 12, H-2*sw);          /* задняя стенка */
+    var inner2 = H - 2*sw, gap2 = (inner2 - n2*sw)/(n2+1);
+    for(var j=0;j<n2;j++) add(sw, dz, sw + gap2*(j+1) + sw*j, L-2*sw, cd-12, sw);
+    /* дверцы — полупрозрачные, чтобы было видно полки внутри */
+    var dh = H - 8, dz0 = 4, hh = clamp(H*0.10, 90, 180), hz = clamp(H*0.42, 200, H-400);
+    if(doorCount() === 2){
+      var dw = (L - 14)/2;
+      add(4, 0, dz0, dw, dz, dh, 0.42);
+      add(L-4-dw, 0, dz0, dw, dz, dh, 0.42);
+      add(4+dw-58, -12, hz, 16, 12, hh);
+      add(L-4-dw+42, -12, hz, 16, 12, hh);
+    } else {
+      add(4, 0, dz0, L-8, dz, dh, 0.42);
+      add(L-62, -12, hz, 16, 12, hh);
+    }
+  }
+
+  /* подготовка к рисованию */
+  for(var i2=0;i2<b.length;i2++){
+    var bd = b[i2];
+    var X = bd.x + bd.w, Y = bd.y + bd.d, Z = bd.z + bd.h;
+    bd.lo = [bd.x, bd.y, bd.z];
+    bd.hi = [X, Y, Z];
+    bd.cen = [(bd.x+X)/2, (bd.y+Y)/2, (bd.z+Z)/2];
+    bd.c = [
+      [bd.x,bd.y,bd.z],[X,bd.y,bd.z],[bd.x,Y,bd.z],[X,Y,bd.z],
+      [bd.x,bd.y,Z],[X,bd.y,Z],[bd.x,Y,Z],[X,Y,Z]
+    ];
+    bd.size = [bd.w, bd.d, bd.h];
+    var gx = 0;
+    if(bd.d > bd.w && bd.d >= bd.h) gx = 1;
+    else if(bd.h > bd.w && bd.h > bd.d) gx = 2;
+    bd.grain = gx;
+    bd.seed = i2*7919 + 13;
+  }
+  return b;
+}
+/* ---------- сцена ---------- */
+var cv = q('canvas');
+var ctx = cv.getContext('2d');
+/* запасной чертёж лежит поверх холста и снимается первым нарисованным кадром:
+   иначе между «скрипт запустился» и «первый кадр готов» видна пустая рамка */
+var fallbackSvg = q('fallback');
+function dropFallback(){
+  if(fallbackSvg && fallbackSvg.parentNode){ fallbackSvg.parentNode.removeChild(fallbackSvg); }
+  fallbackSvg = null;
+}
+var boards = [], centre = [0,0,0], radius = 500;
+var nomMn = [0,0,0], nomMx = [1,1,1];   /* габарит по заданным размерам */
+var fitMn = [0,0,0], fitMx = [1,1,1];   /* с ручками — только для вписывания */
+var yaw = -0.62, pitch = 0.28;
+var PITCH_MIN = -0.30, PITCH_MAX = 1.52;
+var dpr = 1, cw = 320, ch = 300, pending = false, fast = false;
+var stampH = 60;
+var MONO = 'Consolas,"SF Mono",Menlo,"Cascadia Mono","Roboto Mono","Liberation Mono",monospace';
+var theme = { c1:'#efe6d8', c2:'#dccfba', dim:'#6f5f4d', ink:'#2b2119', panel:'#fff', shadow:'20,14,8', shadowA:0.17, font:MONO };
+
+var FACES = [
+  { idx:[0,1,3,2], au:0, av:1, ax:2, sg:-1 },
+  { idx:[4,5,7,6], au:0, av:1, ax:2, sg: 1 },
+  { idx:[0,1,5,4], au:0, av:2, ax:1, sg:-1 },
+  { idx:[2,3,7,6], au:0, av:2, ax:1, sg: 1 },
+  { idx:[0,2,6,4], au:1, av:2, ax:0, sg:-1 },
+  { idx:[1,3,7,5], au:1, av:2, ax:0, sg: 1 }
+];
+var LIGHT = [-0.36,-0.50,0.79], FILL = [0.62,0.30,0.72];
+
+function readTheme(){
+  var cs = getComputedStyle(root);
+  function g(n,f){ var v = cs.getPropertyValue(n); return (v && v.trim()) ? v.trim() : f; }
+  theme.c1 = g('--k-canvas-1','#efe6d8');
+  theme.c2 = g('--k-canvas-2','#dccfba');
+  theme.dim = g('--k-dim','#6f5f4d');
+  theme.ink = g('--k-ink','#2b2119');
+  theme.panel = g('--k-panel','#ffffff');
+  theme.shadow = g('--k-shadow','20,14,8');
+  theme.shadowA = parseFloat(g('--k-shadow-a','0.17')) || 0.17;
+  /* подписи и штамп на рисунке набираются тем же моноширинным, что и все
+     числа страницы: раньше внутрь картинки был вшит четвёртый, чужой шрифт */
+  var fm = getComputedStyle(document.documentElement).getPropertyValue('--fm');
+  theme.font = (fm && fm.trim()) ? fm.trim() : MONO;
+}
+
+function rebuild(){
+  boards = buildBoards(state);
+  nomMn = [0,0,0];
+  nomMx = [state.d1, state.d2, state.d3];
+  var mn = nomMn.slice(), mx = nomMx.slice(), i, k;
+  for(i=0;i<boards.length;i++){
+    for(k=0;k<3;k++){
+      if(boards[i].lo[k] < mn[k]) mn[k] = boards[i].lo[k];
+      if(boards[i].hi[k] > mx[k]) mx[k] = boards[i].hi[k];
+    }
+  }
+  fitMn = mn; fitMx = mx;
+  centre = [(nomMn[0]+nomMx[0])/2, (nomMn[1]+nomMx[1])/2, (nomMn[2]+nomMx[2])/2];
+  var dx = mx[0]-mn[0], dy = mx[1]-mn[1], dz = mx[2]-mn[2];
+  radius = Math.sqrt(dx*dx+dy*dy+dz*dz)/2 || 500;
+}
+
+/* камера: pitch > 0 — смотрим сверху */
+function basis(){
+  var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+  return { cy:cy, sy:sy, cp:cp, sp:sp, u:[sy*cp, cy*cp, -sp] };
+}
+function toCam(p,B){
+  var x = p[0]-centre[0], y = p[1]-centre[1], z = p[2]-centre[2];
+  var rx = x*B.cy - y*B.sy, ry = x*B.sy + y*B.cy;
+  return [rx, ry*B.cp - z*B.sp, ry*B.sp + z*B.cp];
+}
+function extents(B, dist){
+  var sx = 1e-6, sy = 1e-6, i, c, dp;
+  for(i=0;i<8;i++){
+    c = toCam([ (i&1)?fitMx[0]:fitMn[0], (i&2)?fitMx[1]:fitMn[1], (i&4)?fitMx[2]:fitMn[2] ], B);
+    dp = c[1] + dist; if(dp < 1) dp = 1;
+    var ax = Math.abs(c[0]/dp), az = Math.abs(c[2]/dp);
+    if(ax > sx) sx = ax;
+    if(az > sy) sy = az;
+  }
+  return { sx:sx, sy:sy };
+}
+
+/* ---------- честный порядок досок (вместо сортировки по центру) ----------
+   Все детали — прямоугольные бруски. Если два бруска разделены плоскостью
+   по какой-то оси, ближним будет тот, с чьей стороны стоит камера.
+   Дальше — топологическая сортировка. Ошибок «полка сквозь стенку» не остаётся. */
+function sortBoards(C, B){
+  var n = boards.length, i, j, k;
+  var pre = [], dep = [];
+  for(i=0;i<n;i++){
+    var cn = boards[i].cen;
+    dep.push(B.u[0]*(cn[0]-centre[0]) + B.u[1]*(cn[1]-centre[1]) + B.u[2]*(cn[2]-centre[2]));
+    pre.push([]);
+  }
+  for(i=0;i<n;i++) for(j=i+1;j<n;j++){
+    var a = boards[i], b = boards[j], bestW = -1, aFront = null;
+    for(k=0;k<3;k++){
+      var af;
+      if(a.hi[k] <= b.lo[k] + 0.01)      af = (C[k] < (a.hi[k]+b.lo[k])/2);
+      else if(b.hi[k] <= a.lo[k] + 0.01) af = (C[k] > (b.hi[k]+a.lo[k])/2);
+      else continue;
+      var w = Math.abs(B.u[k]);
+      if(w > bestW){ bestW = w; aFront = af; }
+    }
+    if(aFront === null) aFront = dep[i] < dep[j];
+    if(aFront) pre[i].push(j); else pre[j].push(i);
+  }
+  var seed = [], mark = new Array(n), out = [];
+  for(i=0;i<n;i++) seed.push(i);
+  seed.sort(function(x,y){ return dep[y] - dep[x]; });
+  function visit(i){
+    if(mark[i]) return;
+    mark[i] = 1;
+    var L = pre[i];
+    for(var t=0;t<L.length;t++) visit(L[t]);
+    mark[i] = 2;
+    out.push(i);
+  }
+  for(i=0;i<n;i++) visit(seed[i]);
+  return out;
+}
+
+function schedule(){
+  if(pending) return;
+  pending = true;
+  requestAnimationFrame(function(){ pending = false; paint(); });
+}
+/* слабое устройство: то же правило, что и у спила на первом экране */
+function weakDevice(){
+  var sw = screen.width || window.innerWidth, sh = screen.height || window.innerHeight;
+  return !!((navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+            (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+            Math.min(sw, sh) < 520);
+}
+var weak = weakDevice();
+function resize(){
+  var r = cv.getBoundingClientRect();
+  weak = weakDevice();
+  dpr = Math.min(window.devicePixelRatio || 1, weak ? 1.25 : 2);
+  cw = Math.max(160, Math.round(r.width));
+  ch = Math.max(160, Math.round(r.height));
+  cv.width = Math.round(cw*dpr);
+  cv.height = Math.round(ch*dpr);
+  readTheme();
+  schedule();
+}
+/* высота холста больше не подгоняется под пропорции изделия: она задана в стилях
+   и постоянна. Раньше от каждого касания ползунка вся форма прыгала под пальцем,
+   а рисунок два кадра стоял сплющенным. Изделие вписывается функцией extents(). */
+function paint(){
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,cw,ch);
+  var bg = ctx.createLinearGradient(0,0,0,ch);
+  bg.addColorStop(0, theme.c1);
+  bg.addColorStop(1, theme.c2);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0,0,cw,ch);
+  if(fallbackSvg) dropFallback();
+
+  var lines = stampLines();
+  var fs = cw < 400 ? 12 : 13;
+  var lh = fs + 4;
+  stampH = Math.round(lines.length*lh + 12);
+
+  if(!boards.length){ drawStamp(lines, fs, lh); return; }
+
+  var B = basis(), dist = radius*4.6;
+  var C = [ centre[0]-dist*B.u[0], centre[1]-dist*B.u[1], centre[2]-dist*B.u[2] ];
+  var e = extents(B, dist);
+  var stage = Math.max(120, ch - stampH);
+  var f = Math.min(cw*0.5/e.sx, stage*0.5/e.sy) * 0.84;
+  var ox = cw/2, oy = stage/2;
+  function project(p){
+    var c = toCam(p,B), dp = c[1]+dist;
+    if(dp < 1) dp = 1;
+    return [ox + f*c[0]/dp, oy - f*c[2]/dp, dp];
+  }
+
+  drawShadow(project);
+
+  var order = sortBoards(C, B), i, j, k;
+
+  for(i=0;i<order.length;i++){
+    var bd = boards[order[i]];
+    var faces = [];
+    for(j=0;j<6;j++){
+      var fc = FACES[j];
+      /* видно ли грань: камера должна быть с внешней стороны */
+      if(fc.sg > 0 ? !(C[fc.ax] > bd.hi[fc.ax]) : !(C[fc.ax] < bd.lo[fc.ax])) continue;
+      var P = [], bad = false, dsum = 0;
+      for(k=0;k<4;k++){
+        var pr = project(bd.c[fc.idx[k]]);
+        if(pr[2] <= 1){ bad = true; break; }
+        P.push([pr[0],pr[1]]);
+        dsum += pr[2];
+      }
+      if(bad) continue;
+      var wn = [0,0,0]; wn[fc.ax] = fc.sg;
+      var l1 = Math.max(0, wn[0]*LIGHT[0] + wn[1]*LIGHT[1] + wn[2]*LIGHT[2]);
+      var l2 = Math.max(0, wn[0]*FILL[0]  + wn[1]*FILL[1]  + wn[2]*FILL[2]);
+      faces.push({ P:P, d:dsum, face:fc, board:bd, shade:0.52 + 0.40*l1 + 0.16*l2, top:l1 });
+    }
+    faces.sort(function(a,b){ return b.d - a.d; });
+    for(j=0;j<faces.length;j++) paintFace(faces[j]);
+  }
+
+  drawDims(project);
+  drawStamp(lines, fs, lh);
+}
+
+function drawShadow(project){
+  /* на «виде сверху» тень совпадает с изделием и читается как посторонняя плашка — гасим */
+  var k = clamp(Math.cos(pitch)*1.45, 0, 1);
+  if(k <= 0.02 || pitch < -0.02) return;
+  var fl = nomMn[2];
+  var fc = [[nomMn[0],nomMn[1],fl],[nomMx[0],nomMn[1],fl],[nomMx[0],nomMx[1],fl],[nomMn[0],nomMx[1],fl]];
+  var pts = [], cx = 0, cy2 = 0, i, s;
+  for(i=0;i<4;i++){ var p = project(fc[i]); pts.push(p); cx += p[0]/4; cy2 += p[1]/4; }
+  var layers = fast ? 1 : 2;
+  for(s=0;s<layers;s++){
+    var grow = s ? 1.22 : 1.0;
+    ctx.beginPath();
+    for(i=0;i<4;i++){
+      var px = cx + (pts[i][0]-cx)*grow, py = cy2 + (pts[i][1]-cy2)*grow + 3;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgba('+theme.shadow+','+(theme.shadowA*k*(s?0.45:1))+')';
+    ctx.fill();
+  }
+}
+
+function paintFace(qd){
+  var P = qd.P, f2 = qd.face, bd = qd.board, sh = qd.shade, sp1 = WOOD;
+  function outline(){
+    ctx.beginPath();
+    ctx.moveTo(P[0][0],P[0][1]);
+    ctx.lineTo(P[1][0],P[1][1]);
+    ctx.lineTo(P[2][0],P[2][1]);
+    ctx.lineTo(P[3][0],P[3][1]);
+    ctx.closePath();
+  }
+  ctx.save();
+  if(bd.alpha < 1) ctx.globalAlpha = bd.alpha;
+  outline();
+  ctx.fillStyle = rgba(sp1.base, sh);
+  ctx.fill();
+
+  var area = Math.abs((P[1][0]-P[0][0])*(P[3][1]-P[0][1]) - (P[3][0]-P[0][0])*(P[1][1]-P[0][1]));
+  /* на слабом телефоне волокна и блик не видны, а стоят дорого — не рисуем совсем */
+  if(!fast && !weak && area > 380){
+    ctx.save();
+    ctx.clip();
+    var A = [P[1][0]-P[0][0], P[1][1]-P[0][1]];
+    var Bv = [P[3][0]-P[0][0], P[3][1]-P[0][1]];
+    var end = (bd.grain === f2.ax);
+    var run, step, lenMM, N;
+    if(!end && bd.grain === f2.av){ run = Bv; step = A; lenMM = bd.size[f2.au]; }
+    else { run = A; step = Bv; lenMM = bd.size[f2.av]; }
+    N = clamp(Math.round(lenMM / (sp1.step * (end?2.4:1))), 2, 22);
+    grainLines(P[0], run, step, N, sp1, sh, bd.seed + f2.ax*31 + f2.sg*7, end);
+    ctx.restore();
+  }
+
+  outline();
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = rgba(sp1.grain, Math.max(0.35, sh*0.72), 0.6);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function grainLines(P0, run, step, N, sp1, sh, seed, end){
+  var rnd = rngFrom(seed), i, s;
+  var pl = Math.sqrt(run[0]*run[0]+run[1]*run[1]) || 1;
+  var perp = [-run[1]/pl, run[0]/pl];
+  var amp = clamp(Math.sqrt(step[0]*step[0]+step[1]*step[1]) / N * 0.30, 0.4, 2.6);
+  var SEG = 5;
+  function build(list){
+    ctx.beginPath();
+    for(var t=0;t<list.length;t++){
+      var it = list[t];
+      for(s=0;s<=SEG;s++){
+        var u = s/SEG;
+        var w = amp*(Math.sin(u*Math.PI*it.a + it.c)*0.62 + Math.sin(u*Math.PI*it.b + it.c*2)*0.38);
+        var x = P0[0] + run[0]*u + step[0]*it.t + perp[0]*w;
+        var y = P0[1] + run[1]*u + step[1]*it.t + perp[1]*w;
+        if(s===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      }
+    }
+    ctx.stroke();
+  }
+  var light = [], dark = [];
+  for(i=0;i<N;i++){
+    var item = { t:(i+0.5)/N + (rnd()-0.5)*(0.55/N), a:1+rnd()*2.2, b:2+rnd()*3, c:rnd()*6.28 };
+    (rnd() < 0.28 ? dark : light).push(item);
+  }
+  ctx.lineWidth = end ? 0.8 : 1;
+  ctx.strokeStyle = rgba(sp1.grain, Math.max(0.4,sh), end ? 0.16 : 0.24);
+  build(light);
+  ctx.lineWidth = end ? 0.9 : 1.35;
+  ctx.strokeStyle = rgba(sp1.grain, Math.max(0.35,sh*0.85), end ? 0.22 : 0.40);
+  build(dark);
+}
+
+/* ---------- размерные линии: все три размера, а не один ---------- */
+function dimFont(){ return '700 ' + (cw < 400 ? 12 : 13) + 'px ' + theme.font; }
+
+function drawDims(project){
+  var mm = [state.d1, state.d2, state.d3], k, a, b;
+  var pc = project([centre[0],centre[1],centre[2]]);
+  var placed = [];
+  ctx.save();
+  ctx.font = dimFont();
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
+
+  for(k=0;k<3;k++){
+    var best = null;
+    for(a=0;a<2;a++) for(b=0;b<2;b++){
+      var p0 = [0,0,0], p1 = [0,0,0], o1 = (k+1)%3, o2 = (k+2)%3;
+      p0[k] = nomMn[k]; p1[k] = nomMx[k];
+      p0[o1] = p1[o1] = a ? nomMx[o1] : nomMn[o1];
+      p0[o2] = p1[o2] = b ? nomMx[o2] : nomMn[o2];
+      var s0 = project(p0), s1 = project(p1);
+      var len = Math.hypot(s1[0]-s0[0], s1[1]-s0[1]);
+      if(len < 36) continue;
+      var mx2 = (s0[0]+s1[0])/2, my2 = (s0[1]+s1[1])/2;
+      var out = Math.hypot(mx2-pc[0], my2-pc[1]);
+      if(!best || out > best.out) best = { a:s0, b:s1, out:out, mid:[mx2,my2] };
+    }
+    if(!best) continue;
+    drawOneDim(best, mm[k] + ' мм', pc, placed);
+  }
+  ctx.restore();
+}
+
+function drawOneDim(e, label, pc, placed){
+  var ax = e.a[0], ay = e.a[1], bx = e.b[0], by = e.b[1];
+  var dx = bx-ax, dy = by-ay, L = Math.hypot(dx,dy) || 1;
+  var nx = -dy/L, ny = dx/L;
+  if(nx*(e.mid[0]-pc[0]) + ny*(e.mid[1]-pc[1]) < 0){ nx = -nx; ny = -ny; }
+  var off = 15, tw = ctx.measureText(label).width, tries = 0, tx, ty;
+  while(tries < 6){
+    tx = e.mid[0] + nx*(off+11);
+    ty = e.mid[1] + ny*(off+11);
+    var box = { x1:tx-tw/2-4, y1:ty-9, x2:tx+tw/2+4, y2:ty+9 }, hit = false;
+    for(var i=0;i<placed.length;i++){
+      var p = placed[i];
+      if(box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1){ hit = true; break; }
+    }
+    if(!hit){ placed.push(box); break; }
+    off += 20; tries++;
+  }
+  tx = clamp(tx, tw/2 + 6, cw - tw/2 - 6);
+  ty = clamp(ty, 12, ch - stampH - 8);
+
+  ctx.globalAlpha = 0.9;
+  ctx.strokeStyle = theme.dim;
+  ctx.fillStyle = theme.dim;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(ax + nx*(off-9), ay + ny*(off-9));
+  ctx.lineTo(bx + nx*(off-9), by + ny*(off-9));
+  /* выносные и засечки */
+  ctx.moveTo(ax + nx*3, ay + ny*3);      ctx.lineTo(ax + nx*(off+5), ay + ny*(off+5));
+  ctx.moveTo(bx + nx*3, by + ny*3);      ctx.lineTo(bx + nx*(off+5), by + ny*(off+5));
+  ctx.stroke();
+  ctx.beginPath();
+  arrowHead(ax + nx*(off-9), ay + ny*(off-9), dx/L, dy/L);
+  arrowHead(bx + nx*(off-9), by + ny*(off-9), -dx/L, -dy/L);
+  ctx.fill();
+
+  ctx.globalAlpha = 1;
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = theme.c1;
+  ctx.strokeText(label, tx, ty);
+  ctx.fillStyle = theme.dim;
+  ctx.fillText(label, tx, ty);
+}
+function arrowHead(x,y,dx,dy){
+  var L = 7, W = 2.6;
+  ctx.moveTo(x,y);
+  ctx.lineTo(x+dx*L - dy*W, y+dy*L + dx*W);
+  ctx.lineTo(x+dx*L + dy*W, y+dy*L - dx*W);
+  ctx.closePath();
+}
+
+/* ---------- штамп внутри картинки: скриншот самодостаточен ---------- */
+function stampLines(){
+  var p = PRODUCTS[state.product];
+  /* строки держатся короче ширины холста: телефон в штампе обрезать нельзя,
+     ради него скриншот и пересылают. Моноширинный шире прежнего шрифта,
+     поэтому порог узкого варианта поднят, а телефон вынесен отдельной строкой */
+  var narrow = cw < 480;
+  var dims = state.d1 + '×' + state.d2 + '×' + state.d3 + ' мм';
+  /* имя мастера стоит и в узком варианте: скриншот пересылают именно с телефона,
+     и уходить он должен с тем же «кто это», что и широкий. В одну строку с
+     телефоном не сводим — на 320px такая строка обрезается многоточием */
+  if(narrow) return [
+    ['b','«РассЕЯ», Апшеронск'],
+    ['n','Мастер Константин'],
+    ['n','+7 918 307-76-22'],
+    ['b', p.name + ' · ' + state.qty + ' шт.'],
+    ['n', dims]
+  ];
+  return [
+    ['b','«РассЕЯ» — мебель из массива и реставрация, Апшеронск'],
+    ['n','Мастер Константин · +7 918 307-76-22'],
+    ['b', p.name + ' · ' + dims + ' · ' + state.qty + ' шт.'],
+    ['n','Все размеры — в миллиметрах.'],
+    ['n','Точны только заданные размеры. Узлы условные.']
+  ];
+}
+/* обрезка по ширине считалась посимвольно на каждом кадре — теперь ответ помнится */
+var cutCache = {};
+function fitText(s, maxW, key){
+  var ck = key + '|' + Math.round(maxW) + '|' + s;
+  if(cutCache[ck] !== undefined) return cutCache[ck];
+  var t = s;
+  if(ctx.measureText(s).width > maxW){
+    while(t.length > 4 && ctx.measureText(t + '…').width > maxW) t = t.slice(0,-1);
+    t += '…';
+  }
+  cutCache[ck] = t;
+  return t;
+}
+function drawStamp(lines, fs, lh){
+  var top = ch - stampH;
+  ctx.save();
+  ctx.globalAlpha = 0.92;
+  ctx.fillStyle = theme.c1;
+  ctx.fillRect(0, top, cw, stampH);
+  ctx.globalAlpha = 0.35;
+  ctx.strokeStyle = theme.dim;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, top+0.5); ctx.lineTo(cw, top+0.5);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  for(var i=0;i<lines.length;i++){
+    ctx.font = (lines[i][0]==='b' ? '700 ' : '400 ') + fs + 'px ' + theme.font;
+    ctx.fillStyle = lines[i][0]==='b' ? theme.ink : theme.dim;
+    ctx.fillText(fitText(lines[i][1], cw-20, lines[i][0] + fs), 10, top + 9 + i*lh + lh/2);
+  }
+  ctx.restore();
+}
+/* ---------- кнопки выбора ---------- */
+function chips(host, name, list, get, cur, onPick){
+  var html = '', i, key, item;
+  for(i=0;i<list.length;i++){
+    key = list[i]; item = get(key);
+    html += '<label class="rsy-kn__chip"><input type="radio" name="'+UID+'-'+name+'" value="'+esc(key)+'"'+
+            (key===cur ? ' checked' : '')+'><span>'+esc(item.name)+'</span></label>';
+  }
+  host.innerHTML = html;
+  function mark(){
+    var ls = host.querySelectorAll('.rsy-kn__chip'), j;
+    for(j=0;j<ls.length;j++) ls[j].classList.toggle('is-on', !!ls[j].querySelector('input').checked);
+  }
+  host.addEventListener('change', function(e){
+    if(e.target && e.target.name === UID+'-'+name){ mark(); onPick(e.target.value); }
+  });
+  mark();
+}
+
+chips(q('products'),'product',PRODUCT_ORDER,function(k){return PRODUCTS[k];},state.product,function(v){
+  saveDims();
+  state.product = v;
+  var s = saved[v];
+  state.d1 = s.d1; state.d2 = s.d2; state.d3 = s.d3;
+  if(PRODUCTS[v].shelves) state.shelves = s.shelves || PRODUCTS[v].shelves;
+  syncDims(); rebuild(); schedule(); update();
+});
+chips(q('when'),'when',WHEN_ORDER,function(k){return WHEN[k];},state.when,function(v){
+  state.when = v; update();
+});
+
+function saveDims(){
+  saved[state.product] = { d1:state.d1, d2:state.d2, d3:state.d3, shelves:state.shelves };
+}
+
+/* ---------- размеры ---------- */
+var rows = [1,2,3].map(function(i){
+  return { key:'d'+i, num:q('num'+i), rng:q('rng'+i), lab:q('lab'+i), note:q('note'+i) };
+});
+var shRow = q('shelfrow'), shNum = q('shnum'), shRng = q('shrng'), shNote = q('shnote');
+
+function baseNote(r){
+  var lim = PRODUCTS[state.product][r.key];
+  return 'Ползунок: от ' + lim[0] + ' до ' + lim[1] + ' мм.';
+}
+function calmNote(el){
+  clearTimeout(el._t);
+  if(el._base !== undefined && el._base !== null){ el.textContent = el._base; el._base = null; }
+  el.classList.remove('is-warn');
+}
+/* numEl — то самое поле, которое ошиблось. Раньше по таймеру гасились рамки
+   у всех трёх размеров сразу, даже если их только что подсветило отдельно */
+function warnNote(el, msg, numEl){
+  if(el._base === undefined || el._base === null) el._base = el.textContent;
+  el.textContent = msg;
+  el.classList.add('is-warn');
+  announce(msg);
+  clearTimeout(el._t);
+  el._t = setTimeout(function(){
+    el.classList.remove('is-warn');
+    if(el._base != null){ el.textContent = el._base; el._base = null; }
+    if(numEl) numEl.classList.remove('is-warn');
+  }, 5000);
+}
+function shelvesNote(){
+  shNote.textContent = 'На рисунке помещается от 1 до ' + SHELVES_MAX + ' полок, верх и низ изделия сюда не входят. Нужно иначе — напишите в пожеланиях.';
+  shNum.max = SHELVES_MAX; shRng.max = SHELVES_MAX;
+}
+function syncDims(){
+  var p = PRODUCTS[state.product], i, r, lim;
+  for(i=0;i<3;i++){
+    r = rows[i]; lim = p[r.key];
+    state[r.key] = clamp(state[r.key], lim[0], lim[1]);
+    r.lab.textContent = p.axes[i] + ', мм';
+    r.num.min = lim[0]; r.num.max = lim[1]; r.num.value = state[r.key];
+    r.rng.min = lim[0]; r.rng.max = lim[1]; r.rng.value = state[r.key];
+    r.rng.setAttribute('aria-label', p.axes[i] + ' в миллиметрах, ползунок');
+    calmNote(r.note);
+    r.num.classList.remove('is-warn');
+    r.note.textContent = baseNote(r);
+  }
+  if(p.shelves){
+    state.shelves = clamp(state.shelves, 1, SHELVES_MAX);
+    shRow.classList.remove('rsy-kn__hidden');
+    shelvesNote();
+    shNum.value = state.shelves; shRng.value = state.shelves;
+  } else {
+    shRow.classList.add('rsy-kn__hidden');
+  }
+}
+
+function bindDim(r){
+  function apply(raw, hard){
+    var lim = PRODUCTS[state.product][r.key];
+    var v = parseInt(raw,10);
+    if(!isFinite(v)) { if(hard){ r.num.value = state[r.key]; } return; }
+    var c = clamp(hard ? round10(v) : v, lim[0], lim[1]);
+    if(hard && c !== v){
+      warnNote(r.note, v > lim[1]
+        ? 'Ползунок рассчитан до ' + lim[1] + ' мм — поставили ' + lim[1] + '. Нужен другой размер — напишите в пожеланиях.'
+        : 'Ползунок начинается с ' + lim[0] + ' мм — поставили ' + lim[0] + '. Нужен другой размер — напишите в пожеланиях.',
+        r.num);
+      r.num.classList.add('is-warn');
+    }
+    state[r.key] = c;
+    if(String(r.rng.value) !== String(c)) r.rng.value = c;
+    if(hard && String(r.num.value) !== String(c)) r.num.value = c;
+    saveDims(); rebuild(); schedule(); update();
+  }
+  r.num.addEventListener('input', function(){ apply(this.value, false); });
+  r.num.addEventListener('change', function(){ apply(this.value, true); });
+  r.num.addEventListener('blur', function(){ apply(this.value, true); });
+  r.rng.addEventListener('input', function(){ r.num.value = this.value; apply(this.value, false); });
+}
+rows.forEach(bindDim);
+
+function applyShelves(raw, hard){
+  var v = parseInt(raw,10);
+  if(!isFinite(v)){ if(hard) shNum.value = state.shelves; return; }
+  var c = clamp(v, 1, SHELVES_MAX);
+  if(hard && c !== v){
+    warnNote(shNote, 'На рисунке помещается не больше ' + SHELVES_MAX + ' полок — поставили ' + c + '. Нужно иначе — напишите в пожеланиях.', shNum);
+    shNum.classList.add('is-warn');
+  }
+  state.shelves = c;
+  if(hard) shNum.value = c;
+  shRng.value = c;
+  saveDims(); rebuild(); schedule(); update();
+}
+shNum.addEventListener('input', function(){ applyShelves(this.value, false); });
+shNum.addEventListener('change', function(){ applyShelves(this.value, true); });
+shNum.addEventListener('blur', function(){ applyShelves(this.value, true); });
+shRng.addEventListener('input', function(){ shNum.value = this.value; applyShelves(this.value, false); });
+
+var qtyEl = q('qty'), qtyNote = q('qtynote');
+function applyQty(hard){
+  var v = parseInt(qtyEl.value,10);
+  if(!isFinite(v)){ if(hard) qtyEl.value = state.qty; return; }
+  /* верхней границы не было вовсе — в заявку уходило «999999 шт.» */
+  var c = clamp(v, 1, 20);
+  if(hard && c !== v){
+    warnNote(qtyNote, v < 1
+      ? 'Меньше одной штуки не бывает — поставили 1.'
+      : 'За раз считаем до 20 штук — поставили 20. Нужно больше — напишите в пожеланиях.', qtyEl);
+    qtyEl.classList.add('is-warn');
+  }
+  state.qty = c;
+  if(hard) qtyEl.value = c;
+  update();
+}
+qtyEl.addEventListener('input', function(){ applyQty(false); });
+qtyEl.addEventListener('change', function(){ applyQty(true); });
+qtyEl.addEventListener('blur', function(){ applyQty(true); });
+
+/* поля «кто и куда» пересобирают заявку молча: иначе скринридер, пока человек
+   набирает имя, повторяет ему «Стол, 1800×900×750 мм» на каждую букву */
+['name','phone','city'].forEach(function(k){
+  q(k).addEventListener('input', function(){ state[k] = clean(this.value); update(true); });
+});
+q('comment').addEventListener('input', function(){ state.comment = clean(this.value); update(true); });
+/* галочки «о чём спросить мастера» — тоже попадают в заявку */
+q('asks').addEventListener('change', function(){ update(true); });
+/* ---------- текст заявки ---------- */
+function specLine(){
+  var p = PRODUCTS[state.product];
+  return p.name + ', ' + state.d1 + '×' + state.d2 + '×' + state.d3 + ' мм (' +
+         p.axes.join('×').toLowerCase() + '), ' + state.qty + ' шт.';
+}
+function extraLine(){
+  var p = PRODUCTS[state.product], parts = [];
+  if(p.shelves) parts.push('полок внутри ' + state.shelves + ' (не считая верх и низ)');
+  if(!parts.length) return '';
+  return parts.join(', ').replace(/^./, function(c){ return c.toUpperCase(); }) + '.';
+}
+function specBlock(){
+  var out = [specLine()];
+  var e = extraLine(); if(e) out.push(e);
+  var who = [];
+  if(state.name)  who.push('Имя: ' + state.name + '.');
+  if(state.phone) who.push('Телефон: ' + state.phone + '.');
+  if(state.city)  who.push('Город: ' + state.city + '.');
+  if(state.when)  who.push('Когда нужно: ' + WHEN[state.when].name.toLowerCase() + '.');
+  if(who.length) out.push(who.join(' '));
+  if(state.comment) out.push('Пожелания: ' + state.comment);
+  // Вопросы мастеру: заказчик спрашивает — мастер отвечает. Сайт ничего не обещает
+  // от его имени, но и не оставляет человека без выбора.
+  var asks = askedQuestions();
+  if(asks.length) out.push('Вопросы к вам:\n' + asks.map(function(q){ return '— ' + q; }).join('\n'));
+  return out;
+}
+function askedQuestions(){
+  var boxes = root.querySelectorAll('[data-rsy="asks"] input[type="checkbox"]');
+  var list = [];
+  for(var i = 0; i < boxes.length; i++){
+    if(boxes[i].checked) list.push(boxes[i].getAttribute('data-ask'));
+  }
+  return list;
+}
+function messageText(){
+  return 'Здравствуйте, Константин. Заявка с сайта мастерской «РассЕЯ».\n' +
+         specBlock().join('\n') + '\nПодскажите, пожалуйста, цену и сроки.';
+}
+
+var liveT = 0;
+/* подпись холста и «живая строка» обновляются с задержкой: иначе скринридер
+   захлёбывается на каждом движении ползунка */
+function announce(t){
+  clearTimeout(liveT);
+  liveT = setTimeout(function(){
+    q('live').textContent = t;
+    cv.setAttribute('aria-label', specLine() +
+      ' Рисунок изделия: стрелки влево и вправо — поворот, вверх и вниз — наклон.');
+  }, 600);
+}
+function update(silent){
+  var block = specBlock();
+  q('spec').textContent = block.join('\n');
+  q('wa').href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(messageText());
+  if(!silent) announce(specLine());
+}
+
+var statusEl = q('status'), statusTimer = 0;
+function say(msg){
+  statusEl.textContent = msg;
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(function(){ statusEl.textContent = ''; }, 5000);
+}
+q('copy').addEventListener('click', function(){
+  var t = messageText();
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = t;
+    ta.setAttribute('readonly','');
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;padding:0;border:0;opacity:0;pointer-events:none;';
+    root.appendChild(ta);
+    var ok = false;
+    try {
+      ta.contentEditable = 'true';
+      var rg = document.createRange();
+      rg.selectNodeContents(ta);
+      var sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(rg);
+      ta.setSelectionRange(0, 999999);
+      ok = document.execCommand('copy');
+    } catch(err){ ok = false; }
+    root.removeChild(ta);
+    say(ok ? 'Текст скопирован — вставьте куда удобно.'
+           : 'Не вышло скопировать. Выделите текст заявки выше и скопируйте вручную.');
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(function(){ say('Текст скопирован — вставьте куда удобно.'); }, fallback);
+  } else fallback();
+});
+
+/* ---------- поворот ---------- */
+var reduce = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches:false };
+var drag = null, anim = 0;
+function stopAnim(){ if(anim){ cancelAnimationFrame(anim); anim = 0; } }
+function endDrag(){
+  if(!drag) return;
+  drag = null;
+  fast = false;
+  schedule();
+}
+cv.addEventListener('pointerdown', function(e){
+  if(e.pointerType === 'mouse' && e.button !== 0) return;
+  stopAnim();
+  /* markView('') снимается не здесь: простой тап по рисунку гасил подсветку
+     «С угла», хотя вид не менялся. Гасим только при настоящем повороте */
+  drag = { id:e.pointerId, x:e.clientX, y:e.clientY };
+  fast = true;
+  if(cv.setPointerCapture){ try{ cv.setPointerCapture(e.pointerId); }catch(err){} }
+});
+cv.addEventListener('pointermove', function(e){
+  if(!drag || e.pointerId !== drag.id) return;
+  if(e.pointerType === 'mouse' && e.buttons === 0){ endDrag(); return; }
+  var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if(dx || dy) markView('');
+  drag.x = e.clientX; drag.y = e.clientY;
+  yaw += dx * 0.0095;
+  pitch = clamp(pitch + dy * 0.007, PITCH_MIN, PITCH_MAX);
+  if(e.cancelable) e.preventDefault();
+  schedule();
+});
+cv.addEventListener('pointerup', endDrag);
+cv.addEventListener('pointercancel', endDrag);
+cv.addEventListener('lostpointercapture', endDrag);
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('blur', endDrag);
+
+cv.addEventListener('keydown', function(e){
+  var k = e.key, step = e.shiftKey ? 0.35 : 0.14, used = true;
+  if(k === 'ArrowLeft') yaw -= step;
+  else if(k === 'ArrowRight') yaw += step;
+  else if(k === 'ArrowUp') pitch = clamp(pitch + step*0.7, PITCH_MIN, PITCH_MAX);
+  else if(k === 'ArrowDown') pitch = clamp(pitch - step*0.7, PITCH_MIN, PITCH_MAX);
+  else used = false;
+  if(used){ e.preventDefault(); stopAnim(); markView(''); schedule(); }
+});
+
+var VIEWS = { corner:[-0.62,0.28], front:[0,0.08], side:[-1.5708,0.08], top:[0,1.50] };
+function goTo(ty, tp){
+  stopAnim();
+  var d = ty - yaw;
+  while(d > Math.PI) d -= Math.PI*2;
+  while(d < -Math.PI) d += Math.PI*2;
+  ty = yaw + d;
+  if(reduce.matches){ yaw = ty; pitch = tp; fast = false; schedule(); return; }
+  var y0 = yaw, p0 = pitch, t0 = 0, start = 0;
+  fast = true;
+  anim = requestAnimationFrame(function tick(ts){
+    if(!start) start = ts;
+    t0 = clamp((ts - start)/300, 0, 1);
+    var k = 1 - Math.pow(1-t0, 3);
+    yaw = y0 + (ty - y0)*k;
+    pitch = p0 + (tp - p0)*k;
+    paint();
+    if(t0 < 1) anim = requestAnimationFrame(tick);
+    else { anim = 0; fast = false; schedule(); }
+  });
+}
+function markView(name){
+  var bs = q('views').querySelectorAll('[data-view]'), i;
+  for(i=0;i<bs.length;i++) bs[i].setAttribute('aria-pressed', bs[i].getAttribute('data-view') === name ? 'true' : 'false');
+}
+q('views').addEventListener('click', function(e){
+  var btn = e.target.closest ? e.target.closest('.rsy-kn__view') : null;
+  if(!btn) return;
+  var v = btn.getAttribute('data-view'), t = btn.getAttribute('data-tilt');
+  if(v && VIEWS[v]){ markView(v); goTo(VIEWS[v][0], VIEWS[v][1]); }
+  else if(t) goTo(yaw, clamp(pitch + (t === 'up' ? 0.30 : -0.30), PITCH_MIN, PITCH_MAX));
+});
+
+/* ---------- запуск ---------- */
+var lastW = 0;
+function onResize(){
+  var r = cv.getBoundingClientRect();
+  if(Math.abs(r.width - lastW) > 2 || Math.abs(r.height*1 - ch) > 2){
+    lastW = r.width;
+    resize();
+  }
+}
+if(window.ResizeObserver) new ResizeObserver(onResize).observe(cv);
+else window.addEventListener('resize', onResize);
+
+if(window.matchMedia){
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  var onTheme = function(){ readTheme(); schedule(); };
+  if(mq.addEventListener) mq.addEventListener('change', onTheme);
+  else if(mq.addListener) mq.addListener(onTheme);
+}
+/* липкой строки у конструктора больше нет: внизу экрана уже стоит полоса связи
+   сайта с той же кнопкой WhatsApp, а вдвоём они съедали пятую часть телефона
+   и накрывали собственную форму конструктора. */
+if(window.MutationObserver){
+  var mo = new MutationObserver(function(){ readTheme(); schedule(); });
+  var opt = { attributes:true, attributeFilter:['class','data-theme','data-color-scheme'] };
+  mo.observe(document.documentElement, opt);
+  if(document.body) mo.observe(document.body, opt);
+}
+
+markView('corner');
+syncDims();
+rebuild();
+update();
+resize();
+})();
+</script>
+</div>
+    </div>
+  </section>
+
+  <!-- ===================== ФОТОГРАФИИ (СНЯТ ДО ПОЯВЛЕНИЯ СВОИХ СНИМКОВ) =====
+
+       Раздел временно убран из страницы: пустые рамки на телефоне занимали
+       целый экран и читались как недоделанный сайт. Чужие фотографии
+       ставить нельзя ни в каком виде.
+
+       КАК ВЕРНУТЬ РАЗДЕЛ, КОГДА КОНСТАНТИН СНИМЕТ РАБОТЫ:
+       1. Снять этот комментарий с блока ниже (убрать строку начала и конца).
+       2. Каждый блок div.shot заменить на тег картинки со ссылкой на свой
+          файл рядом с index.html, с шириной, высотой и подписью alt.
+       3. Вернуть пункт «Фотографии» в три меню: в шапке (nav.top__nav),
+          в полосе разделов (nav.jump) и в подвале.
+       4. Добавить в head строку og:image со ссылкой на свой же файл.
+
+       СЪЁМКА: дневной свет, вещь целиком плюс один крупный план (стык,
+       кромка, петля). Каждый файл сжать до 300 и 500 КБ.
+       Имена по порядку: rabota-01-stol, rabota-02-restavraciya,
+       masterskaya-fabrichnaya.
+       Нужные кадры: стол из массива целиком, горизонтальный, 1600 на 1200;
+       реставрация до и после, два кадра с одной точки, 1200 на 1200;
+       мастерская на Фабричной, вход и место для машины, 1600 на 1200.
+
+  <section class="sec" id="foto" aria-labelledby="h-foto">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Фотографии</span>
+      <div class="head">
+        <h2 id="h-foto">Фотографии работ</h2>
+        <p>Здесь встанут снимки самого Константина — своя работа, снятая своими руками.</p>
+      </div>
+      <div class="shots">
+        <div class="shot"><b>Стол из массива, целиком</b><span>дневной свет</span></div>
+        <div class="shot"><b>Реставрация: до и после</b><span>два кадра с одной точки</span></div>
+        <div class="shot"><b>Мастерская на Фабричной</b><span>вход и где встать машине</span></div>
+      </div>
+    </div>
+  </section>
+
+  ================================================================== -->
+
+  <!-- ===================== КОНТАКТЫ ===================== -->
+  <section class="sec sec--band" id="kontakty" aria-labelledby="h-kontakty">
+    <div class="wrap">
+      <span class="mark" aria-hidden="true">Контакты</span>
+      <div class="head">
+        <h2 id="h-kontakty">Звоните Константину</h2>
+        <p>С девяти до шести. Номер один на всё: звонок, WhatsApp и Telegram — второй запоминать не нужно.</p>
+      </div>
+      <div class="cnt">
+        <div>
+          <a class="telbig" href="tel:+79183077622">+7 (918) 307-76-22</a>
+          <div class="cta">
+            <a class="btn" href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.9 7L4 20l1.1-3.9A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+              Написать в WhatsApp
+            </a>
+            <a class="btn" href="https://t.me/+79183077622" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5 3 11.5l5 1.8L19 7.5l-8.3 8 .3 4.5 2.6-3.3 4.2 3z"/></svg>
+              Написать в Telegram
+            </a>
+          </div>
+          <p class="note come">WhatsApp и Telegram — на этом же номере: <a class="n" href="tel:+79183077622">+7 (918) 307-76-22</a>. Если ссылка не открыла чат, наберите номер в мессенджере руками.</p>
+          <p class="note come">Заехать можно на улицу Фабричную в Апшеронске, часы работы с 9:00 до 18:00; о дне приезда лучше договориться по телефону. У мастерской есть где встать машине. <a href="https://yandex.ru/maps/?text=%D0%90%D0%BF%D1%88%D0%B5%D1%80%D0%BE%D0%BD%D1%81%D0%BA%2C%20%D1%83%D0%BB%D0%B8%D1%86%D0%B0%20%D0%A4%D0%B0%D0%B1%D1%80%D0%B8%D1%87%D0%BD%D0%B0%D1%8F" target="_blank" rel="noopener noreferrer">Улица Фабричная на карте</a> — номер дома уточните у Константина по телефону.</p>
+        </div>
+        <dl>
+          <div><dt>Мастер</dt><dd>Константин</dd></div>
+          <div><dt>Адрес</dt><dd>Апшеронск, Краснодарский край, улица Фабричная</dd></div>
+          <div><dt>Парковка</dt><dd>у мастерской</dd></div>
+          <div><dt>Часы</dt><dd class="n">с 9:00 до 18:00</dd></div>
+          <div><dt>Замер</dt><dd>выезжаем бесплатно, куда сможем приехать — скажет мастер</dd></div>
+          <div><dt>Доставка</dt><dd>Апшеронск и район, с установкой</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <span class="m">Мастерская</span>
+      <p>«РассЕЯ» — мебель из массива и реставрация. Апшеронск, Краснодарский край, улица Фабричная. Мастер Константин, с 9:00 до 18:00.</p>
+      <p class="foot__tel"><a class="n" href="tel:+79183077622">+7 (918) 307-76-22</a></p>
+      <p>Апшеронск вырос вокруг леспромхоза: лес возили узкоколейкой — самой длинной горной узкоколейной дорогой России, построенной в тридцатые. Больше 80% района и сейчас занято лесом, в предгорье преобладает дуб.</p>
+      <!-- кнопка скрыта в разметке и включается скриптом: без JS она мертва -->
+      <button class="tbtn" id="theme" type="button" hidden>Включить вечерний свет</button>
+    </div>
+    <div>
+      <span class="m">Связь</span>
+      <p><a class="n" href="tel:+79183077622">+7 (918) 307-76-22</a></p>
+      <p><a href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">WhatsApp</a> · <a href="https://t.me/+79183077622" target="_blank" rel="noopener noreferrer">Telegram</a> — на этом же номере</p>
+    </div>
+    <div>
+      <span class="m">Разделы</span>
+      <nav aria-label="Разделы сайта, подвал">
+        <ul>
+          <li><a href="#chto">Что делаем</a></li>
+          <li><a href="#razmery">Размеры</a></li>
+          <li><a href="#cena">Цена и сроки</a></li>
+          <li><a href="#sobrat">Собрать под свой размер</a></li>
+          <li><a href="#kontakty">Контакты</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<nav class="callbar" aria-label="Быстрая связь">
+  <a class="pri" href="tel:+79183077622">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3z"/></svg>
+    Позвонить
+  </a>
+  <a href="https://wa.me/79183077622" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.9 7L4 20l1.1-3.9A8 8 0 1 1 20 12z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+    WhatsApp
+  </a>
+  <a href="https://t.me/+79183077622" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 5 3 11.5l5 1.8L19 7.5l-8.3 8 .3 4.5 2.6-3.3 4.2 3z"/></svg>
+    Telegram
+  </a>
+</nav>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"LocalBusiness",
+  "name":"Мастерская «РассЕЯ»",
+  "description":"Мебель из массива на заказ и реставрация мебели. Столы, стулья, шкафы, кухни, беседки и сауны, барные стойки, навесы и двери.",
+  "address":{"@type":"PostalAddress","streetAddress":"улица Фабричная","addressLocality":"Апшеронск","addressRegion":"Краснодарский край","addressCountry":"RU"},
+  "telephone":"+7-918-307-76-22",
+  "priceRange":"от 25 000 ₽",
+  "areaServed":"Апшеронск и Апшеронский район",
+  "employee":{"@type":"Person","name":"Константин","jobTitle":"мастер"},
+  "makesOffer":[
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Мебель из массива на заказ"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Реставрация антикварной мебели"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Восстановление деревянных изделий"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Изготовление столов, стульев, шкафов"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Ремонт деревянной мебели"}}
+  ]
+}
+</script>
+<!-- Расписание openingHoursSpecification намеренно НЕ указано: без dayOfWeek
+     блок невалиден, а рабочие дни мастерской неизвестны — выдумывать нельзя.
+     Когда Константин назовёт дни, добавьте в объект выше, например:
+     "openingHoursSpecification":[{"@type":"OpeningHoursSpecification",
+       "dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],
+       "opens":"09:00","closes":"18:00"}]
+     Туда же после публикации добавьте "url" и "image" со своим адресом.
+     Часы 9:00 и 18:00 для человека и так стоят в шапке, контактах и подвале. -->
+
+<script>
+(function(){
+"use strict";
+
+var root = document.documentElement;
+var mqDark   = window.matchMedia("(prefers-color-scheme: dark)");
+var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+var reduced  = mqReduce.matches;
+var stopAll  = null;   /* ссылка на остановку холста, ставится ниже */
+var syncGfx  = null;   /* ссылка на кнопку роста колец, ставится ниже */
+
+/* «уменьшить движение» могут включить в системе, не перезагружая вкладку */
+function onMotion(e){
+  reduced = e.matches;
+  if (reduced && typeof stopAll === "function") stopAll();
+  if (typeof syncGfx === "function") syncGfx();
+}
+if (mqReduce.addEventListener) mqReduce.addEventListener("change", onMotion);
+else if (mqReduce.addListener) mqReduce.addListener(onMotion);
+
+/* ------------------------------------------------------------------ */
+/* 1. Тема: кнопка в подвале, meta theme-color, реакция на смену в ОС  */
+/* ------------------------------------------------------------------ */
+var themeBtn = document.getElementById("theme");
+if (themeBtn) themeBtn.hidden = false;
+
+function effective(){
+  var a = root.getAttribute("data-theme");
+  return (a === "dark" || a === "light") ? a : (mqDark.matches ? "dark" : "light");
+}
+function syncTheme(){
+  var dark = effective() === "dark";
+  /* меняется только надпись: она сама полностью описывает действие.
+     aria-pressed рядом с меняющейся надписью даёт скринридеру два
+     противоречащих сигнала («Включить дневной свет, нажато»). */
+  if (themeBtn) themeBtn.textContent = dark ? "Включить дневной свет" : "Включить вечерний свет";
+  var bg = getComputedStyle(root).getPropertyValue("--bg").trim() || "#E7E3D9";
+  var metas = document.querySelectorAll('meta[name="theme-color"]');
+  for (var i = 0; i < metas.length; i++){
+    /* тема выбрана руками — условия media должны отпустить цвет */
+    if (root.getAttribute("data-theme")) metas[i].removeAttribute("media");
+    if (!metas[i].getAttribute("media")) metas[i].setAttribute("content", bg);
+  }
+  if (typeof repaint === "function") repaint();
+}
+/* кнопку могут убрать при правке подвала — без проверки падал бы весь скрипт,
+   вместе с ним калькулятор размеров и спил */
+if (themeBtn){
+  themeBtn.addEventListener("click", function(){
+    var next = effective() === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("rasseya-theme", next); } catch(e){}
+    syncTheme();
+  });
+}
+function onSys(){ if (!root.getAttribute("data-theme")) syncTheme(); }
+if (mqDark.addEventListener) mqDark.addEventListener("change", onSys);
+else if (mqDark.addListener) mqDark.addListener(onSys);
+
+/* ------------------------------------------------------------------ */
+/* 2. Размеры → готовое сообщение в WhatsApp                           */
+/* ------------------------------------------------------------------ */
+(function(){
+  var kind = document.getElementById("kind"),
+      prev = document.getElementById("preview"), send = document.getElementById("send");
+  if (!kind || !send) return;
+
+  /* три габарита: ползунок, подпись, блок целиком и слово для сообщения */
+  var dim = [
+    { a:"l", r:document.getElementById("rL"), o:document.getElementById("oL"), box:document.getElementById("cL"), lab:document.querySelector('label[for="rL"]'), word:"длина"  },
+    { a:"b", r:document.getElementById("rB"), o:document.getElementById("oB"), box:document.getElementById("cB"), lab:document.querySelector('label[for="rB"]'), word:"ширина" },
+    { a:"h", r:document.getElementById("rH"), o:document.getElementById("oH"), box:document.getElementById("cH"), lab:document.querySelector('label[for="rH"]'), word:"высота" }
+  ];
+  for (var q = 0; q < dim.length; q++){
+    if (!dim[q].r || !dim[q].o || !dim[q].box) return;
+  }
+
+  function opt(){ return kind.options[kind.selectedIndex]; }
+  function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* габариты берутся из выбранного пункта: у беседки свои, у кухни свои,
+     у двери длины не бывает, а у реставрации размеров не спрашивают вовсе.
+     Оттуда же берутся и названия осей: у стула и шкафа второй размер —
+     глубина. Иначе одна и та же вещь уходит мастеру двумя разными письмами:
+     «900 × 600 × 2000 (длина × ширина × высота)» отсюда и
+     «900×600×2000 (ширина×глубина×высота)» из конструктора ниже. */
+  function applyKind(){
+    var o = opt();
+    var words = (o.getAttribute("data-axes") || "длина|ширина|высота").split("|");
+    for (var i = 0; i < dim.length; i++){
+      var v = o.getAttribute("data-" + dim[i].a);
+      dim[i].on = !!v;
+      dim[i].box.hidden = !v;
+      if (v) dim[i].r.value = v;
+      /* доступное имя ползунка даёт сам <label for>, поэтому меняем его текст,
+         а не aria-label: иначе два имени начнут расходиться */
+      if (words[i]){
+        dim[i].word = words[i];
+        if (dim[i].lab) dim[i].lab.textContent = cap(words[i]);
+      }
+    }
+  }
+
+  function shown(){
+    var a = [];
+    for (var i = 0; i < dim.length; i++) if (dim[i].on) a.push(dim[i]);
+    return a;
+  }
+
+  function text(){
+    var a = shown(), i;
+    if (!a.length){
+      return "Здравствуйте, Константин. Пишу с сайта. Интересует: " + kind.value +
+             ". Опишу подробнее и пришлю фото. Подскажите, пожалуйста, срок и стоимость.";
+    }
+    var nums = [], words = [];
+    for (i = 0; i < a.length; i++){ nums.push(a[i].r.value); words.push(a[i].word); }
+    return "Здравствуйте, Константин. Пишу с сайта. Интересует: " + kind.value +
+           ", примерно " + nums.join(" × ") + " мм (" + words.join(" × ") +
+           "). Подскажите, пожалуйста, срок и стоимость.";
+  }
+
+  var sendLabel = document.getElementById("sendLabel"),
+      ctlNote = document.getElementById("ctlNote"),
+      restNote = document.getElementById("restNote");
+
+  function upd(){
+    var any = shown().length > 0;
+    /* без габаритов кнопка не должна обещать «отправить размеры» */
+    if (sendLabel) sendLabel.textContent = any ? "Отправить размеры в WhatsApp" : "Написать Константину в WhatsApp";
+    if (ctlNote) ctlNote.hidden = !any;
+    if (restNote) restNote.hidden = any;
+    for (var i = 0; i < dim.length; i++){
+      var v = dim[i].r.value + " мм";
+      dim[i].o.textContent = v;
+      dim[i].r.setAttribute("aria-valuetext", v);   /* иначе читается голое «1600» */
+    }
+    var t = text();
+    prev.textContent = t;
+    send.href = "https://wa.me/79183077622?text=" + encodeURIComponent(t);
+  }
+
+  kind.addEventListener("change", function(){ applyKind(); upd(); });
+  for (var j = 0; j < dim.length; j++){
+    dim[j].r.addEventListener("input", upd);
+    dim[j].r.addEventListener("change", upd);
+  }
+  applyKind();
+  upd();
+})();
+
+/* ------------------------------------------------------------------ */
+/* 3. Спил бревна на canvas.                                           */
+/*    Ничего не крутится само: статичный кадр, поворот пальцем и один  */
+/*    конечный показ роста колец. Слабое устройство и prefers-reduced- */
+/*    motion получают облегчённую геометрию и мгновенный кадр.         */
+/* ------------------------------------------------------------------ */
+var repaint = null;
+(function(){
+  var cv = document.getElementById("log");
+  var fall = document.getElementById("logfall");
+  if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
+  var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  var weak = true, RINGS = 12, SEG = 72, SIDE = 40, RAYS = 20;
+
+  /* класс устройства пересчитывается на каждом изменении размера: при загрузке
+     в альбомной ориентации окно шире 520px, а телефон под ним тот же самый.
+     screen.width от поворота не зависит, поэтому берём меньшую сторону экрана. */
+  function classify(){
+    var sw = screen.width || window.innerWidth, sh = screen.height || window.innerHeight;
+    weak = (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+           (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+           (conn && (conn.saveData || /2g/.test(conn.effectiveType || ""))) ||
+           Math.min(sw, sh) < 520;
+    RINGS = weak ? 12 : 17;
+    SEG   = weak ? 72 : 132;
+    SIDE  = weak ? 40 : 72;
+    RAYS  = weak ? 20 : 44;
+    DPR   = Math.min(window.devicePixelRatio || 1, weak ? 1.25 : 2);
+  }
+
+  var W = 0, H = 0, DPR = 1, T2 = 0;
+  var baseRY = 0.24, dragRY = 0, rx = 0.40;
+  var grow = 1, raf = 0, pend = false, growing = false, gStart = 0, played = false, visible = true;
+
+  var KA = 2.42, KR = 0.47, CRACK = -0.72;
+
+  var pal = null;
+  function readPalette(){
+    var cs = getComputedStyle(root);
+    function v(n){ return cs.getPropertyValue(n).trim(); }
+    pal = { face:v("--w-face"), early:v("--w-early"), late:v("--w-late"), side:v("--w-side"),
+            bark:v("--w-bark"), knot:v("--w-knot"), crack:v("--w-crack"), ray:v("--w-ray"),
+            glare:v("--glare") || "rgba(255,246,226,.18)", shade:v("--shade") || "rgba(58,40,22,.26)" };
+  }
+
+  var hexCache = {};
+  function hex(s){
+    if (hexCache[s]) return hexCache[s];
+    var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(s || "#808080");
+    var r = m ? [parseInt(m[1],16), parseInt(m[2],16), parseInt(m[3],16)] : [128,128,128];
+    hexCache[s] = r; return r;
+  }
+  function mix(c1, c2, t){
+    var a = hex(c1), b = hex(c2);
+    return "rgb(" + Math.round(a[0]+(b[0]-a[0])*t) + "," + Math.round(a[1]+(b[1]-a[1])*t) + "," +
+                    Math.round(a[2]+(b[2]-a[2])*t) + ")";
+  }
+
+  var S = { cy:1, sy:0, cx:1, sx:0, f:1, ox:0, oy:0 };
+  function setRot(a,b){ S.cy=Math.cos(a); S.sy=Math.sin(a); S.cx=Math.cos(b); S.sx=Math.sin(b); }
+  function px(x,y,z){
+    var x1 =  x*S.cy + z*S.sy, z1 = -x*S.sy + z*S.cy;
+    var y1 =  y*S.cx - z1*S.sx, z2 = y*S.sx + z1*S.cx;
+    var f  =  S.f / (S.f + z2);
+    return [S.ox + x1*f, S.oy + y1*f, z2];
+  }
+  function normZ(nx, ny){ return ny*S.sx + (-nx*S.sy)*S.cx; }
+
+  function ringRadius(base, a, i, R){
+    var r = base * (1 + 0.022*Math.sin(a*3 + i*1.7) + 0.011*Math.sin(a*7 - i*2.3));
+    var kx = Math.cos(KA)*KR*R, ky = Math.sin(KA)*KR*R;
+    var dx = r*Math.cos(a) - kx, dy = r*Math.sin(a) - ky;
+    var d = Math.sqrt(dx*dx + dy*dy), infl = R*0.40;
+    if (d < infl){ var t = 1 - d/infl; r += R*0.055*t*t; }
+    return r;
+  }
+  function ringPath(base, i, R, upTo){
+    var end = Math.max(2, Math.round(SEG*upTo));
+    ctx.beginPath();
+    for (var k=0; k<=end; k++){
+      var a = (k/SEG)*Math.PI*2, r = ringRadius(base, a, i, R);
+      var p = px(r*Math.cos(a), r*Math.sin(a), -T2);
+      if (k===0) ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]);
+    }
+    if (upTo >= 1) ctx.closePath();
+  }
+  function outlinePath(R){
+    ctx.beginPath();
+    for (var k=0; k<=SEG; k++){
+      var a = (k/SEG)*Math.PI*2, p = px(R*Math.cos(a), R*Math.sin(a), -T2);
+      if (k===0) ctx.moveTo(p[0],p[1]); else ctx.lineTo(p[0],p[1]);
+    }
+    ctx.closePath();
+  }
+
+  function draw(){
+    if (!W || !H || !pal) return;
+    var R = Math.min(W, H) * 0.345, T = R*0.62; T2 = T/2;
+    S.f = R*3.4; S.ox = W/2; S.oy = H/2 + R*0.05;
+    setRot(baseRY + dragRY, rx);
+    ctx.clearRect(0,0,W,H);
+
+    /* боковая поверхность */
+    var strips = [], k, a0, a1, am, nz;
+    for (k=0; k<SIDE; k++){
+      a0 = (k/SIDE)*Math.PI*2; a1 = ((k+1.06)/SIDE)*Math.PI*2; am = (a0+a1)/2;
+      nz = normZ(Math.cos(am), Math.sin(am));
+      if (nz >= 0) continue;
+      strips.push([a0,a1,am,nz]);
+    }
+    strips.sort(function(p,q){ return q[3]-p[3]; });
+    for (k=0; k<strips.length; k++){
+      var s = strips[k];
+      var A = px(R*Math.cos(s[0]), R*Math.sin(s[0]), -T2);
+      var B = px(R*Math.cos(s[1]), R*Math.sin(s[1]), -T2);
+      var C = px(R*Math.cos(s[1]), R*Math.sin(s[1]),  T2);
+      var D = px(R*Math.cos(s[0]), R*Math.sin(s[0]),  T2);
+      var cn = Math.cos(s[2]), sn = Math.sin(s[2]);
+      var nx1 = cn*S.cy, nz1 = -cn*S.sy, ny1 = sn*S.cx - nz1*S.sx;
+      var lam = Math.max(0, nx1*(-0.45) + ny1*(-0.62) + s[3]*(-0.64));
+      var shade = 0.32 + 0.68*lam;
+      var fib = 0.28*Math.sin(s[2]*17.3) + 0.18*Math.sin(s[2]*6.7 + 1.1);
+      var col = mix(pal.bark, pal.side, Math.max(0, Math.min(1, shade*0.92 + fib*0.10)));
+      ctx.fillStyle = col; ctx.strokeStyle = col; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(A[0],A[1]); ctx.lineTo(B[0],B[1]); ctx.lineTo(C[0],C[1]); ctx.lineTo(D[0],D[1]);
+      ctx.closePath(); ctx.fill(); ctx.stroke();
+    }
+
+    /* торец */
+    ctx.save();
+    outlinePath(R);
+    ctx.fillStyle = pal.face;
+    ctx.fill();
+    ctx.clip();
+
+    if (RAYS){
+      ctx.strokeStyle = pal.ray; ctx.globalAlpha = 0.28; ctx.lineWidth = 1;
+      for (k=0; k<RAYS; k++){
+        var ang = (k/RAYS)*Math.PI*2 + 0.11;
+        var r0 = R*0.10, r1 = R*(0.72 + 0.26*Math.abs(Math.sin(k*2.7)));
+        var p0 = px(r0*Math.cos(ang), r0*Math.sin(ang), -T2);
+        var p1 = px(r1*Math.cos(ang), r1*Math.sin(ang), -T2);
+        ctx.beginPath(); ctx.moveTo(p0[0],p0[1]); ctx.lineTo(p1[0],p1[1]); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    var shown = grow*RINGS;
+    for (var i=1; i<=RINGS; i++){
+      if (i-1 > shown) break;
+      var upTo = Math.max(0, Math.min(1, shown-(i-1)));
+      if (upTo <= 0.02) continue;
+      var f = i/RINGS;
+      var base = R*(0.085 + 0.895*Math.pow(f, 0.82));
+      /* кольца держатся у тёмного края палитры — иначе в вечерней теме сливаются */
+      ctx.strokeStyle = mix(pal.late, pal.early, 0.04 + 0.22*Math.abs(Math.sin(i*1.9)));
+      ctx.lineWidth = Math.max(1, R*0.012*(0.6 + 0.8*Math.abs(Math.sin(i*1.3))));
+      ringPath(base, i, R, upTo);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = pal.crack;
+    ctx.beginPath();
+    for (k=0; k<=10; k++){
+      var tt = k/10, rr = R*(0.16 + 0.82*tt);
+      var wob = 0.030*Math.sin(tt*7.0) + 0.016*(1-tt);
+      var pA = px(rr*Math.cos(CRACK+wob), rr*Math.sin(CRACK+wob), -T2);
+      if (k===0) ctx.moveTo(pA[0],pA[1]); else ctx.lineTo(pA[0],pA[1]);
+    }
+    for (k=10; k>=0; k--){
+      var t2 = k/10, r2 = R*(0.16 + 0.82*t2);
+      var w2 = 0.030*Math.sin(t2*7.0) - 0.004 - 0.020*t2;
+      var pB = px(r2*Math.cos(CRACK+w2), r2*Math.sin(CRACK+w2), -T2);
+      ctx.lineTo(pB[0],pB[1]);
+    }
+    ctx.closePath(); ctx.fill();
+
+    if (grow > 0.55){
+      var kx = Math.cos(KA)*KR*R, ky = Math.sin(KA)*KR*R;
+      for (var q=3; q>=1; q--){
+        ctx.beginPath();
+        for (k=0; k<=32; k++){
+          var aa = (k/32)*Math.PI*2;
+          var kr = R*0.055*q*(1 + 0.14*Math.sin(aa*3+q));
+          var pk = px(kx + kr*Math.cos(aa)*1.25, ky + kr*Math.sin(aa)*0.82, -T2);
+          if (k===0) ctx.moveTo(pk[0],pk[1]); else ctx.lineTo(pk[0],pk[1]);
+        }
+        ctx.closePath();
+        ctx.fillStyle = q===1 ? pal.knot : mix(pal.knot, pal.late, q===2 ? 0.42 : 0.72);
+        ctx.fill();
+      }
+    }
+
+    /* свет по торцу — оба края берутся из темы, а не забиты чёрным */
+    var g = ctx.createLinearGradient(S.ox-R, S.oy-R, S.ox+R*0.8, S.oy+R);
+    g.addColorStop(0, pal.glare);
+    g.addColorStop(0.55, "rgba(0,0,0,0)");
+    g.addColorStop(1, pal.shade);
+    ctx.fillStyle = g;
+    ctx.fillRect(S.ox-R*1.6, S.oy-R*1.6, R*3.2, R*3.2);
+    ctx.restore();
+
+    outlinePath(R);
+    ctx.strokeStyle = pal.bark;
+    ctx.lineWidth = Math.max(2, R*0.035);
+    ctx.stroke();
+
+    if (fall && fall.parentNode){ fall.parentNode.removeChild(fall); fall = null; }
+  }
+
+  /* один кадр на requestAnimationFrame — палец не может заказать больше */
+  function schedule(){
+    if (pend || growing) return;
+    pend = true;
+    requestAnimationFrame(function(){ pend = false; draw(); });
+  }
+  repaint = function(){ readPalette(); schedule(); };
+
+  function resize(){
+    var box = cv.parentNode, w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    /* адресная строка мобильного Chrome дёргает ResizeObserver на каждом
+       движении пальца — на неизменившемся размере перерисовывать нечего */
+    if (w === W && h === H) return;
+    classify();
+    W = w; H = h;
+    cv.width = Math.round(w*DPR); cv.height = Math.round(h*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    draw();
+  }
+
+  /* конечный показ роста колец: 2,2 секунды и стоп */
+  function tick(now){
+    raf = 0;
+    var t = Math.min(1, (now - gStart)/2200);
+    grow = t; draw();
+    if (t < 1 && visible) raf = requestAnimationFrame(tick);
+    else { growing = false; grow = 1; if (!visible) draw(); }
+  }
+  function play(){
+    if (reduced || growing) { grow = 1; schedule(); return; }
+    growing = true; grow = 0; gStart = performance.now();
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  /* важное: остановка ОБЯЗАНА дорисовать спил целиком. Иначе пролистнул на
+     середине роста — и вернулся к недорисованному торцу без сучка навсегда. */
+  function stop(){ if (raf){ cancelAnimationFrame(raf); raf = 0; } growing = false; grow = 1; draw(); }
+  stopAll = stop;
+
+  /* при «уменьшить движение» рост колец не проигрывается — тогда и кнопки быть
+     не должно: мёртвая кнопка читается как сломанный сайт */
+  var gfx = document.getElementById("gfx");
+  if (gfx){
+    syncGfx = function(){ gfx.hidden = reduced; };
+    syncGfx();
+    gfx.addEventListener("click", function(){ play(); });
+  }
+
+  /* поворот пальцем — только по горизонтали, вертикаль остаётся прокрутке */
+  var hint = document.getElementById("hint");
+  if (hint) hint.hidden = false;
+  function turn(d){
+    dragRY = Math.max(-0.9, Math.min(0.9, dragRY + d));
+    schedule();
+  }
+  /* с клавиатуры спил тоже поворачивается: холст в табуляции, стрелки крутят */
+  cv.addEventListener("keydown", function(e){
+    var d = e.key === "ArrowLeft" ? -0.12 : e.key === "ArrowRight" ? 0.12 : 0;
+    if (!d) return;
+    e.preventDefault();
+    turn(d);
+  });
+  if (window.PointerEvent){
+    var down = false, x0 = 0, b0 = 0;
+    cv.addEventListener("pointerdown", function(e){
+      down = true; x0 = e.clientX; b0 = dragRY;
+      cv.classList.add("drag");
+      try { cv.setPointerCapture(e.pointerId); } catch(err){}
+    });
+    cv.addEventListener("pointermove", function(e){
+      if (!down) return;
+      dragRY = Math.max(-0.9, Math.min(0.9, b0 + (e.clientX - x0)*0.006));
+      schedule();
+    });
+    var up = function(){ down = false; cv.classList.remove("drag"); };
+    /* конец жеста слушаем на окне: если захват не встал и палец отпустили
+       мимо холста, курсор «grabbing» залипал навсегда */
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  }
+
+  if (window.ResizeObserver){
+    /* только resize(): он сам заканчивается draw(), лишний schedule() рисовал
+       второй полный кадр подряд на каждое движение адресной строки */
+    new ResizeObserver(function(){ resize(); }).observe(cv.parentNode);
+  } else {
+    window.addEventListener("resize", resize);
+  }
+
+  /* автозапуск только на нормальном аппарате и без «уменьшить движение».
+     На слабом телефоне и при reduced-motion сразу стоит готовый кадр,
+     а рост колец показывает кнопка — как и написано в замысле выше. */
+  classify();
+  var auto = !reduced && !weak && !!window.IntersectionObserver;
+
+  if (window.IntersectionObserver){
+    new IntersectionObserver(function(en){
+      visible = en[0].isIntersecting;
+      if (visible){
+        if (auto && !played){ played = true; play(); }
+        else if (!growing) schedule();   /* вернулись в зону видимости — дорисовать */
+      } else {
+        stop();
+      }
+    }, { threshold: 0.15 }).observe(cv);
+  } else { played = true; }
+
+  document.addEventListener("visibilitychange", function(){
+    if (document.hidden) stop(); else schedule();
+  });
+
+  readPalette();
+  /* если рост будет проигран — первый кадр рисуем пустым торцом, иначе видно
+     рывок «целый спил → пустой → растёт» */
+  if (auto) grow = 0;
+  resize();
+  if (!auto){ grow = 1; draw(); }
+})();
+
+syncTheme();
+})();
+</script>
+</body>
+</html>
